@@ -25,12 +25,14 @@ def extract(url):
     # TODO: Length of Path
 
     # TODO: Length of Top Level Domain
-    if is_tld(url):
-        parsed_tld = get_tld(url, fix_protocol=True)
+    parsed_tld = get_tld(url, fix_protocol=True, fail_silently=True)
+    if parsed_tld is None:
+        url_dt.update({"TLDLength": 0})
+    else:
         tld_len = len(parsed_tld)
         url_dt.update({"TLDLength": tld_len})
-    elif not is_tld(url):
-        url_dt.update({"TLDLength": 0})
+    # elif not is_tld(url):
+    #     url_dt.update({"TLDLength": 0})
 
     # TODO: Count of special characters
 

@@ -7,12 +7,19 @@ import logging
 from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.pipeline import Pipeline
 from sklearn.feature_selection import SelectKBest, f_classif, chi2
-from sklearn.preprocessing import MinMaxScaler
+from sklearn import preprocessing
+from sklearn.preprocessing import MinMaxScaler, LabelEncoder
 from sklearn.model_selection import train_test_split
 
 log = logging.getLogger()
 
 class URLFeatureExtractor(TransformerMixin):
+    """
+    Custom transformer for extracting different feature sets from
+    input data. Supports either: 
+    - Lexical-based features
+    - Host-based features
+    """
     def __init__(self, feature_type="lexical"):
         self.feature_type = feature_type
 
@@ -47,13 +54,19 @@ class FeatureImportanceSelector(TransformerMixin):
     def fit(self, *_):
         return self
 
-class XScalerTransformer(TransformerMixin):
+class XYTransformer(TransformerMixin):
     def __init__(self, test_size, random_state):
         self.test_size = test_size
         self.random_state = random_state
 
-    def transform(self, X, Y):
-        return sklearn.preprocessing.scale(x)
+    # def transform(self, X, Y):
+    def transform(self, X):
+        X = preprocessing.scale(X)
+        # enc = preprocessing.LabelEncoder()
+        # Y = enc.fit_transform(Y)
+        
+        # return X, Y
+        return X
 
     def fit(self, *_):
         return self

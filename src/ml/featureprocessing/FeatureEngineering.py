@@ -2,6 +2,7 @@ import urllib.parse
 import whois
 import re
 from tld import get_tld, is_tld
+from urllib.parse import urlparse
 
 def clean_data(url):
     url_obj = urlparse(url)

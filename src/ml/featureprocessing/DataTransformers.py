@@ -8,7 +8,7 @@ from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.pipeline import Pipeline
 from sklearn.feature_selection import SelectKBest, f_classif, chi2
 from sklearn import preprocessing
-from sklearn.preprocessing import MinMaxScaler, LabelEncoder
+from sklearn.preprocessing import MinMaxScaler, LabelEncoder, RobustScaler
 from sklearn.model_selection import train_test_split
 
 log = logging.getLogger()
@@ -58,15 +58,18 @@ class XYTransformer(TransformerMixin):
     def __init__(self, test_size, random_state):
         self.test_size = test_size
         self.random_state = random_state
+        self.scaler = RobustScaler()
 
     # def transform(self, X, Y):
     def transform(self, X):
-        X = preprocessing.scale(X)
+        transformed_x = pd.DataFrame(columns = None)
+        for (column_name, column_data) in X.iteritems():
+            transformed_x[column_name] = self.scaler.fit_transform(X[column_name].values.reshape(-1, 1))
         # enc = preprocessing.LabelEncoder()
         # Y = enc.fit_transform(Y)
         
         # return X, Y
-        return X
+        return transformed_x
 
     def fit(self, *_):
         return self

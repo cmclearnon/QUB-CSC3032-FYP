@@ -1,0 +1,23 @@
+{
+  "name": "qub-csc3032-fyp",
+  "version": "1.0.0",
+  "description": "NPM Package for React UI for project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cmclearnon/QUB-CSC3032-FYP.git"
+  },
+  "author": "Chris McLearnon",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cmclearnon/QUB-CSC3032-FYP/issues"
+  },
+  "homepage": "https://github.com/cmclearnon/QUB-CSC3032-FYP#readme",
+  "dependencies": {
+    "save-dev": "0.0.1-security",
+    "webpack": "^4.41.6"
+  }
+}

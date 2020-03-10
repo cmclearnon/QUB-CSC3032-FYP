@@ -3,6 +3,8 @@ import whois
 import re
 from tld import get_tld, is_tld
 from urllib.parse import urlparse
+import pandas as pd
+import datetime
 
 def clean_data(url):
     url_obj = urlparse(url)
@@ -84,19 +86,88 @@ def host_extract(url):
     """
     This function extracts any domain specific features from the URL to add to the dataset model
     """
-
-    # Registry date of Domain
+    if not url:
+        return
+    
+    feature_list = []
+    url_dt = {}
     url_regex = '(?:http.*://)?(?P<host>[^:/ ]+).*'
     url_search = re.search(url_regex, url)
     hostname = url_search.group('host')
 
-    domain = whois.query(hostname)
+    try:
+        domain = whois.whois(hostname)
+    except whois.parser.PywhoisError:
+        url_dt.update({
+            "RegistryDate": "",
+            "ExpirationDate": "",
+            "HostCountry": "",
+            "DomainAge": 0,
+            "ExpYear": 0,
+            "ExpMonth": 0,
+            "ExpDay": 0
+        })
+        
+        feature_list.append(url_dt)
+        df = pd.DataFrame(feature_list)
+        return df
+    except timeout:
+        url_dt.update({
+            "RegistryDate": "",
+            "ExpirationDate": "",
+            "HostCountry": "",
+            "DomainAge": 0,
+            "ExpYear": 0,
+            "ExpMonth": 0,
+            "ExpDay": 0
+        })
+        
+        feature_list.append(url_dt)
+        df = pd.DataFrame(feature_list)
+        
+        return df
+    except gaierror:
+        url_dt.update({
+            "RegistryDate": "",
+            "ExpirationDate": "",
+            "HostCountry": "",
+            "DomainAge": 0,
+            "ExpYear": 0,
+            "ExpMonth": 0,
+            "ExpDay": 0
+        })
+        
+        feature_list.append(url_dt)
+        df = pd.DataFrame(feature_list)
+        
+        return df
+        
+        
     reg_date = domain.creation_date
-    print(reg_date)
+    
+    if isinstance(reg_date, list):
+        url_dt.update({"RegistryDate": reg_date[0]})
+    else:
+        url_dt.update({"RegistryDate": reg_date})
 
-    # TODO: PageRank
+    exp_date = domain.expiration_date
+    if isinstance(exp_date, list):
+        url_dt.update({"ExpirationDate": exp_date[0]})
+    else:
+        url_dt.update({"ExpirationDate": exp_date})
 
-    # TODO: Google Index
+    country = domain.country
+    url_dt.update({"HostCountry": country})
+    #print(url_dt)
+    domain_age = datetime.datetime.now() - url_dt["RegistryDate"]
+    age_in_days = domain_age.days
+    url_dt.update({"DomainAge": age_in_days})
 
-    # TODO: Is in Alexa Top 1 Million Websites
+    feature_list.append(url_dt)
+    df = pd.DataFrame(feature_list)
+    df["ExpYear"] = df["ExpirationDate"].dt.year
+    df["ExpMonth"] = df["ExpirationDate"].dt.month
+    df["ExpDay"] = df["ExpirationDate"].dt.day
+    
+    return df
 

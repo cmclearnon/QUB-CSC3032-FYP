@@ -36,7 +36,7 @@ class URLFeatureExtractor(TransformerMixin):
             # feature_dict.update({"URLType": row["URLType"]})
             feature_list.append(feature_dict)
 
-        feature_df = pd.DataFrame(feature_list)
+        feature_df = pd.concat(feature_list)
         return feature_df
 
 class FeatureImportanceSelector(TransformerMixin):

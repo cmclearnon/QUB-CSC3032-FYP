@@ -4,7 +4,9 @@ import re
 from tld import get_tld, is_tld
 from urllib.parse import urlparse
 import pandas as pd
+import numpy as np
 import datetime
+from socket import *
 
 def clean_data(url):
     url_obj = urlparse(url)
@@ -99,13 +101,13 @@ def host_extract(url):
         domain = whois.whois(hostname)
     except whois.parser.PywhoisError:
         url_dt.update({
-            "RegistryDate": "",
-            "ExpirationDate": "",
-            "HostCountry": "",
-            "DomainAge": 0,
-            "ExpYear": 0,
-            "ExpMonth": 0,
-            "ExpDay": 0
+            "RegistryDate": pd.NaT,
+            "ExpirationDate": pd.NaT,
+            "HostCountry": None,
+            "DomainAge": np.NaN,
+            "ExpYear": np.NaN,
+            "ExpMonth": np.NaN,
+            "ExpDay": np.NaN
         })
         
         feature_list.append(url_dt)
@@ -113,13 +115,13 @@ def host_extract(url):
         return df
     except timeout:
         url_dt.update({
-            "RegistryDate": "",
-            "ExpirationDate": "",
-            "HostCountry": "",
-            "DomainAge": 0,
-            "ExpYear": 0,
-            "ExpMonth": 0,
-            "ExpDay": 0
+            "RegistryDate": pd.NaT,
+            "ExpirationDate": pd.NaT,
+            "HostCountry": None,
+            "DomainAge": np.NaN0,
+            "ExpYear": np.NaN,
+            "ExpMonth": np.NaN,
+            "ExpDay": np.NaN
         })
         
         feature_list.append(url_dt)
@@ -128,13 +130,43 @@ def host_extract(url):
         return df
     except gaierror:
         url_dt.update({
-            "RegistryDate": "",
-            "ExpirationDate": "",
-            "HostCountry": "",
-            "DomainAge": 0,
-            "ExpYear": 0,
-            "ExpMonth": 0,
-            "ExpDay": 0
+            "RegistryDate": pd.NaT,
+            "ExpirationDate": pd.NaT,
+            "HostCountry": None,
+            "DomainAge": np.NaN,
+            "ExpYear": np.NaN,
+            "ExpMonth": np.NaN,
+            "ExpDay": np.NaN
+        })
+        
+        feature_list.append(url_dt)
+        df = pd.DataFrame(feature_list)
+        
+        return df
+    except ConnectionResetError:
+        url_dt.update({
+            "RegistryDate": pd.NaT,
+            "ExpirationDate": pd.NaT,
+            "HostCountry": None,
+            "DomainAge": np.NaN,
+            "ExpYear": np.NaN,
+            "ExpMonth": np.NaN,
+            "ExpDay": np.NaN
+        })
+        
+        feature_list.append(url_dt)
+        df = pd.DataFrame(feature_list)
+        
+        return df
+    except ConnectionRefusedError:
+        url_dt.update({
+            "RegistryDate": pd.NaT,
+            "ExpirationDate": pd.NaT,
+            "HostCountry": None,
+            "DomainAge": np.NaN,
+            "ExpYear": np.NaN,
+            "ExpMonth": np.NaN,
+            "ExpDay": np.NaN
         })
         
         feature_list.append(url_dt)
@@ -144,30 +176,48 @@ def host_extract(url):
         
         
     reg_date = domain.creation_date
-    
     if isinstance(reg_date, list):
         url_dt.update({"RegistryDate": reg_date[0]})
+    elif (reg_date is None) or (reg_date == ""):
+        url_dt.update({"RegistryDate": pd.NaT})
     else:
-        url_dt.update({"RegistryDate": reg_date})
+        try:
+            url_dt.update({"RegistryDate": pd.to_datetime(reg_date)})
+        except ValueError:
+            url_dt.update({"RegistryDate": pd.NaT})
 
     exp_date = domain.expiration_date
     if isinstance(exp_date, list):
         url_dt.update({"ExpirationDate": exp_date[0]})
+    elif (exp_date is None) or (exp_date == ""):
+        url_dt.update({"ExpirationDate": pd.NaT})
     else:
-        url_dt.update({"ExpirationDate": exp_date})
+        try:
+            url_dt.update({"ExpirationDate": pd.to_datetime(exp_date)})
+        except ValueError:
+            url_dt.update({"ExpirationDate": pd.NaT})
 
     country = domain.country
     url_dt.update({"HostCountry": country})
-    #print(url_dt)
-    domain_age = datetime.datetime.now() - url_dt["RegistryDate"]
-    age_in_days = domain_age.days
-    url_dt.update({"DomainAge": age_in_days})
+
+    if pd.isnull(url_dt["RegistryDate"]):
+        domain_age = np.NaN
+        url_dt.update({"DomainAge": domain_age})
+    else:
+        domain_age = datetime.datetime.now() - url_dt["RegistryDate"]
+        age_in_days = domain_age.days
+        url_dt.update({"DomainAge": age_in_days})
 
     feature_list.append(url_dt)
     df = pd.DataFrame(feature_list)
-    df["ExpYear"] = df["ExpirationDate"].dt.year
-    df["ExpMonth"] = df["ExpirationDate"].dt.month
-    df["ExpDay"] = df["ExpirationDate"].dt.day
+    # if pd.isnull(df["ExpirationDate"].any):
+    #     df["ExpYear"] = float("NaN")
+    #     df["ExpMonth"] = float("NaN")
+    #     df["ExpDay"] = float("NaN")
+    # else:
+    #     df["ExpYear"] = df["ExpirationDate"].dt.year
+    #     df["ExpMonth"] = df["ExpirationDate"].dt.month
+    #     df["ExpDay"] = df["ExpirationDate"].dt.day
     
     return df
 

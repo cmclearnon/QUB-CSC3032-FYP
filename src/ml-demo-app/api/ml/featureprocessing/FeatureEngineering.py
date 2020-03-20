@@ -104,10 +104,10 @@ def host_extract(url):
             "RegistryDate": pd.NaT,
             "ExpirationDate": pd.NaT,
             "HostCountry": None,
-            "DomainAge": np.NaN,
-            "ExpYear": np.NaN,
-            "ExpMonth": np.NaN,
-            "ExpDay": np.NaN
+            "DomainAge": np.NaN
+            # "ExpYear": np.NaN,
+            # "ExpMonth": np.NaN,
+            # "ExpDay": np.NaN
         })
         
         feature_list.append(url_dt)
@@ -118,10 +118,10 @@ def host_extract(url):
             "RegistryDate": pd.NaT,
             "ExpirationDate": pd.NaT,
             "HostCountry": None,
-            "DomainAge": np.NaN0,
-            "ExpYear": np.NaN,
-            "ExpMonth": np.NaN,
-            "ExpDay": np.NaN
+            "DomainAge": np.NaN
+            # "ExpYear": np.NaN,
+            # "ExpMonth": np.NaN,
+            # "ExpDay": np.NaN
         })
         
         feature_list.append(url_dt)
@@ -133,10 +133,10 @@ def host_extract(url):
             "RegistryDate": pd.NaT,
             "ExpirationDate": pd.NaT,
             "HostCountry": None,
-            "DomainAge": np.NaN,
-            "ExpYear": np.NaN,
-            "ExpMonth": np.NaN,
-            "ExpDay": np.NaN
+            "DomainAge": np.NaN
+            # "ExpYear": np.NaN,
+            # "ExpMonth": np.NaN,
+            # "ExpDay": np.NaN
         })
         
         feature_list.append(url_dt)
@@ -148,10 +148,10 @@ def host_extract(url):
             "RegistryDate": pd.NaT,
             "ExpirationDate": pd.NaT,
             "HostCountry": None,
-            "DomainAge": np.NaN,
-            "ExpYear": np.NaN,
-            "ExpMonth": np.NaN,
-            "ExpDay": np.NaN
+            "DomainAge": np.NaN
+            # "ExpYear": np.NaN,
+            # "ExpMonth": np.NaN,
+            # "ExpDay": np.NaN
         })
         
         feature_list.append(url_dt)
@@ -163,10 +163,10 @@ def host_extract(url):
             "RegistryDate": pd.NaT,
             "ExpirationDate": pd.NaT,
             "HostCountry": None,
-            "DomainAge": np.NaN,
-            "ExpYear": np.NaN,
-            "ExpMonth": np.NaN,
-            "ExpDay": np.NaN
+            "DomainAge": np.NaN
+            # "ExpYear": np.NaN,
+            # "ExpMonth": np.NaN,
+            # "ExpDay": np.NaN
         })
         
         feature_list.append(url_dt)

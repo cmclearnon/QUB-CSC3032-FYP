@@ -1,0 +1,33 @@
+{
+    "DataFrames": {
+        "Lexical": {
+            "full_dataset": "",
+            "x_train": "",
+            "x_test": "",
+            "y_train": "",
+            "y_test": ""
+        },
+        "Domain": {
+            "full_dataset": "",
+            "x_train": "",
+            "x_test": "",
+            "y_train": "",
+            "y_test": ""
+        }
+    },
+    "Numpy-Arrays": {
+        "Lexical": {
+            "full_dataset": "",
+            "x_train": "",
+            "x_test": "",
+            "y_train": "",
+            "y_test": ""
+        },
+        "Domain": {
+            "full_dataset": "",
+            "x_train": "",
+            "x_test": "",
+            "y_train": "",
+            "y_test": ""
+        }
+}

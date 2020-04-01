@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import URLForm from './components/URLForm';
 import Prediction from './components/Prediction';
 import { Box, Heading, Button, Grommet, Collapsible, Layer, ResponsiveContext, Grid } from 'grommet';
-import { Notification, FormClose } from 'grommet-icons';
+import { TextInput } from 'grommet';
+import { Menu, FormClose } from 'grommet-icons';
 
 const theme = {
   global: {
@@ -68,11 +69,15 @@ class App extends React.Component {
           {size => (
             <Box fill>
               <AppBar>
-                <Heading level='3' margin='none'>Malicious URL Detection w/ML</Heading>
                 <Button
-                  icon={<Notification />}
+                  icon={<Menu />}
                   onClick={() => this.setState({ showSidebar: !this.state.showSidebar })}
                 />
+                <Heading level='3' margin='none'>Malicious URL Detection w/ML</Heading>
+                {/* <Button
+                  icon={<Menu />}
+                  onClick={() => this.setState({ showSidebar: !this.state.showSidebar })}
+                /> */}
               </AppBar>
               <Box direction='row' flex overflow={{ horizontal: 'hidden' }}>
                 <Box flex align='left' justify='centre' background='light-5'>
@@ -89,8 +94,14 @@ class App extends React.Component {
                     <Box gridArea="header" background="teal" />
                     <Box gridArea="nav" background="white">
                       <form onSubmit={this.handleSubmit}>
-                          <input name="url" type="text" placeholder="URL" value={this.state.url} onChange={this.handleURLChange}/>
-                          <button>Predict</button>
+                          {/* <input name="url" type="text" placeholder="URL" value={this.state.url} onChange={this.handleURLChange}/> */}
+                          <TextInput
+                            placeholder="URL"
+                            value={this.state.url}
+                            onChange={this.handleURLChange}
+                          />
+                          {/* <button>Predict</button> */}
+                          <Button label='Submit' onClick={this.handleSubmit} />
                           <Prediction predProba = {this.state.pred_proba}/>
                       </form>
                     </Box>
@@ -119,10 +130,10 @@ class App extends React.Component {
                       align='center'
                       direction='row'
                     >
-                      <Button
+                      {/* <Button
                         icon={<FormClose />}
                         onClick={() => this.setState({ showSidebar: false })}
-                      />
+                      /> */}
                     </Box>
                   </Layer>
                 )}

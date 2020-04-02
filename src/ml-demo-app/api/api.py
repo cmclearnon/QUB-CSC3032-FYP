@@ -3,13 +3,32 @@ from joblib import load
 import pandas as pd
 import logging
 
-from ml.featureprocessing.DataTransformers import URLFeatureExtractor
+from ml.featureprocessing.DataTransformers import URLFeatureExtractor, DomainFeatureExtractor, DateEncoder, DomainFeatureScaler
 
 from sklearn.preprocessing import RobustScaler
 
 log = logging.getLogger()
 
+from flask_cors import CORS
+from flask_restful import Api
+import os
+
+from setup import setup_db
+from db import db
+from endpointresources.DatasetResource import DatasetResource
+
+basedir = os.path.abspath(os.path.dirname(__file__))
 app = Flask(__name__)
+CORS(app)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'db/datasets.db')
+
+db.init_app(app)
+db.app = app
+setup_db()
+
+api = Api(app)
+api.add_resource(DatasetResource, '/datasets')
+
 
 @app.route('/predict')
 def get_current_time():
@@ -40,3 +59,27 @@ def get_current_time():
     }
     # return json.dumps({'predict_proba': pred_proba[0][1]})
     return jsonify(return_d)
+
+@app.route('/domain_predict')
+def domain_prediction():
+    url = request.args.get('url', type=str)
+    d = {'URL': [url]}
+    df = pd.DataFrame(data=d)
+
+    extractor = DomainFeatureExtractor()
+    base_df = extractor.transform(df)
+    date_encoder = DateEncoder()
+    dates_to_encode = base_df[['RegistryDate', 'ExpirationDate']]
+    encoded_dates_df = date_encoder.transform(dates_to_encode)
+    log.error(f'Encoded Dates: {encoded_dates_df}')
+
+    base_df = base_df.drop(['RegistryDate', 'ExpirationDate'], axis=1)
+    log.error(f'BEFORE SCALING: {base_df}')
+    df_to_scale = pd.concat([base_df, encoded_dates_df])
+
+    scaler = DomainFeatureScaler()
+    scaled_df = scaler.transform(df_to_scale)
+    log.error(f'X: {scaled_df}')
+
+    return jsonify({'OK'})
+

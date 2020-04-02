@@ -1,10 +1,11 @@
 from db import db
-from models.DomainFullFeatureSet import DomainFullFeatureSet
+from models.DomainFeatureSet import DomainFeatureSet
 
 import csv, sqlite3
 from flask_restful import reqparse
 
 def setup_db():
+    dataset_count = 0
     try:
         dataset_count=db.session.execute('SELECT COUNT(*) FROM domain_full_featureset').first()[0]
     except Exception as error:

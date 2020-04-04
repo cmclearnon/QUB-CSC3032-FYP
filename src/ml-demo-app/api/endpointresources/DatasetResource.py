@@ -3,6 +3,7 @@ from models.DomainFeatureSet import DomainFeatureSet
 from req_param_parser import params_parser
 
 dataset_fields = {
+    'id': fields.Integer,
     'RegistryDate_year': fields.Integer,
     'RegistryDate_month': fields.Integer,
     'RegistryDate_day': fields.Integer,
@@ -25,9 +26,11 @@ def paginated(queried_object_fields):
 
 class DatasetResource(Resource):
     @params_parser(
-        reqparse.Argument('page', type=int, required=False, location='args', default=1),
+        reqparse.Argument('page', type=int, required=False, location='args', default=0),
         reqparse.Argument('size', type=int, required=False, location='args', default=10),
     )
     @marshal_with(paginated(dataset_fields))
     def get(self, page, size):
-        return DomainFeatureSet.query.paginate(page, size, False)
+        result = DomainFeatureSet.query.paginate(page, size, False)
+        print(result.page)
+        return result

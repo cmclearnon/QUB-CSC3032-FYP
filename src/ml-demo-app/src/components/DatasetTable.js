@@ -7,6 +7,7 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
+import { CircularProgress } from '@material-ui/core';
 
 const columns = [
   { id: 'RegistryDate_year',
@@ -84,22 +85,63 @@ const tableclass = {
     }
 }
 
-const DatasetTable = (props) => {
-  const rows = props.items;
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
-
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
+export default class DatasetTable extends React.Component {
+  state = {
+    page: 0,
+    rowsPerPage: 10,
+    dataset: [],
+    total: 0,
+    error: null,
   };
 
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(+event.target.value);
-    setPage(0);
+  componentDidMount() {
+    this.fetchDataset(this.state.page)
+  }
+
+  fetchDataset = () => {
+    const { page, rowsPerPage } = this.state
+    if (page > 0) {
+      var tmpPage = page + 1;
+    } else {
+      var tmpPage = page
+    }
+    return fetch(`http://localhost:5000/datasets?page=${tmpPage}&size=${rowsPerPage}`)
+      .then(apiResponse => apiResponse.json())
+      .then(paginatedDataset =>
+        this.setState({
+          total: paginatedDataset.total,
+          dataset: paginatedDataset.items
+        })
+      )
+      .catch(error =>
+        this.setState({
+          error,
+        })
+      );
+  }
+
+  handleChangePage = (event, newPage) => {
+    this.setState({
+      page: newPage
+    }, () => { 
+      this.fetchDataset(this.state.page)
+    });
   };
 
-  return (
-    <Paper className={paperclass.root} elevation={3}>
+  handleChangeRowsPerPage = (event) => {
+    this.setState({
+      rowsPerPage: event.target.value,
+      page: 0
+    }, () => { 
+      this.fetchDataset(this.state.page)
+    });
+  };
+
+  render() {
+    const {page, rowsPerPage, total} = this.state
+    const {dataset} = this.state
+    return (
+      <Paper className={paperclass.root} elevation={3}>
       <TableContainer className={tableclass.container}>
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
@@ -119,13 +161,13 @@ const DatasetTable = (props) => {
         <div style={{ overflow: 'auto', height: '550px'}}>
           <Table style={{tableLayout: 'fixed'}}>  
             <TableBody>
-                {rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+                {dataset.slice(0, rowsPerPage).map((row, index) => {
                 return (
-                    <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
-                    {columns.map((column) => {
+                    <TableRow hover role="checkbox" tabIndex={-1} key={index}>
+                    {columns.map((column, colIndex) => {
                         const value = row[column.id];
                         return (
-                        <TableCell key={column.id} align={column.align}>
+                        <TableCell key={index+colIndex} align={column.align}>
                             {column.format && typeof value === 'number' ? column.format(value) : value}
                         </TableCell>
                         );
@@ -140,14 +182,13 @@ const DatasetTable = (props) => {
       <TablePagination
         rowsPerPageOptions={[10, 25, 100]}
         component="div"
-        count={rows.length}
+        count={total}
         rowsPerPage={rowsPerPage}
         page={page}
-        onChangePage={handleChangePage}
-        onChangeRowsPerPage={handleChangeRowsPerPage}
+        onChangePage={this.handleChangePage}
+        onChangeRowsPerPage={this.handleChangeRowsPerPage}
       />
     </Paper>
-  );
+    )
+  };
 }
-
-export default DatasetTable;

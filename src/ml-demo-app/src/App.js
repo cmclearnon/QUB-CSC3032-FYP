@@ -22,12 +22,17 @@ class App extends React.Component {
     this.state = {
         url: '',
         pred_proba: [],
-        page: 1,
-        rowsPerPage: 100,
+        page: 0,
+        rowsPerPage: 10,
         total: 0,
         dataset: [],
         error: null
     };
+  }
+
+  fetchWithDelay = () => {
+    const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
+    Promise.all([delay(3000), this.fetchDataset()]);
   }
 
   fetchDataset = () => {
@@ -46,12 +51,6 @@ class App extends React.Component {
           error
         })
       );
-  }
-
-
-  componentDidMount() {
-    this.fetchDataset()
-    console.log(this.state.total)
   }
 
   handleSubmit(event) {
@@ -120,7 +119,8 @@ class App extends React.Component {
           align="center"
           pad={{ horizontal: "medium", vertical: "small" }}
         >
-          <DatasetTable items={this.state.dataset} page={this.state.page} rowsPerPage={this.state.rowsPerPage}/>
+          {/* <DatasetTable items={this.state.dataset} total={this.state.total}/> */}
+          <DatasetTable/>
         </Box>
       </Grid>
     </Grommet>

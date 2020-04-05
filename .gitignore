@@ -127,3 +127,6 @@ node_modules
 
 # Yarn cache
 src/ml-demo-app/.yarn/
+
+src/ml-demo-app/node_modules
+src/ml-demo-app/yarn.lock

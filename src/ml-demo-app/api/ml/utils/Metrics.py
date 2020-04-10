@@ -1,4 +1,5 @@
 from sklearn.metrics import confusion_matrix
+from sklearn.metrics import accuracy_score
 
 # class Metrics():
 #     def __init__(self):
@@ -28,3 +29,7 @@ def fpr(y_true, y_pred):
     tn, fp, fn, tp = confusion_matrix(y_true, y_pred).ravel()
     rate = (fp/(fp+tn))
     return rate
+
+def accuracy(y_true, y_pred):
+    return accuracy_score(y_true, y_pred, normalize=True)
+

@@ -16,6 +16,7 @@ import os
 from setup import setup_db
 from db import db
 from endpointresources.DatasetResource import DatasetResource
+from endpointresources.ModelAccuracyResource import ModelAccuracyResource
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 app = Flask(__name__)
@@ -28,6 +29,7 @@ setup_db()
 
 api = Api(app)
 api.add_resource(DatasetResource, '/datasets')
+api.add_resource(ModelAccuracyResource, '/model_accuracy')
 
 
 @app.route('/predict')

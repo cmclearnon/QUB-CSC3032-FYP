@@ -1,9 +1,5 @@
 from sklearn.metrics import confusion_matrix
 from sklearn.metrics import accuracy_score
-
-# class Metrics():
-#     def __init__(self):
-#         super().__init__()
             
 def tn(y_true, y_pred): return confusion_matrix(y_true, y_pred)[0, 0]
 def fp(y_true, y_pred): return confusion_matrix(y_true, y_pred)[0, 1]
@@ -32,4 +28,6 @@ def fpr(y_true, y_pred):
 
 def accuracy(y_true, y_pred):
     return accuracy_score(y_true, y_pred, normalize=True)
+
+
 

@@ -33,13 +33,14 @@ const useStyles = makeStyles((theme) => ({
 
 const PredictionsMetrics = (props) => {
     const {className, ...rest} = props;
+    const {tpr, fpr} = props;
     const classes = useStyles();
     const theme = useTheme();
 
     const predictionData = {
         datasets: [
             {
-              data: [89, 11],
+              data: [Math.round(tpr * 1000) / 10, Math.round(fpr * 1000) / 10],
               backgroundColor: [
                 theme.palette.primary.main,
                 theme.palette.error.main,
@@ -78,12 +79,12 @@ const PredictionsMetrics = (props) => {
     const metrics = [
         {
             'name': 'True Positive',
-            'value': 88,
+            'value': Math.round(tpr * 1000) / 10,
             color: theme.palette.primary.main
         },
         {
             'name': 'False Positive',
-            'value': 12,
+            'value': Math.round(fpr * 1000) / 10,
             color: theme.palette.primary.main
         }
     ];

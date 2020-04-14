@@ -49,6 +49,7 @@ const useStyles = makeStyles(theme => ({
 
 const ModelAccuracy = props => {
     const {className, ...rest} = props;
+    const {accuracy} = props;
     const classes = useStyles();
 
     // Component Card
@@ -66,12 +67,13 @@ const ModelAccuracy = props => {
                         <Typography
                             className = {classes.title}
                             color = 'textSecondary'
+                            gutterBottom
                             variant = 'body2'
                         >
-                            Model Accuracy
+                            MODEL ACCURACY
                         </Typography>
                         <Typography variant = 'h3'>
-                            0.988
+                        {Math.round(accuracy * 1000) / 10}%
                         </Typography>
                     </Grid>
                     <Grid item>

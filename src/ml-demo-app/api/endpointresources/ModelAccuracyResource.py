@@ -27,9 +27,14 @@ class ModelAccuracyResource(Resource):
         tpr = Metrics.tpr(y_test, y_pred)
         fnr = Metrics.fnr(y_test, y_pred)
         acc = Metrics.accuracy(y_test, y_pred)
+
+        y_score = model.decision_function(x_test)
+        auc_score = Metrics.auc_score(y_test, y_score)
+
         result = {
             'tpr': tpr,
             'fnr': fnr,
-            'accuracy': acc
+            'accuracy': acc,
+            'auc_score': auc_score
         }
         return result

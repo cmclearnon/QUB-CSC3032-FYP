@@ -1,5 +1,7 @@
 from sklearn.metrics import confusion_matrix
 from sklearn.metrics import accuracy_score
+from sklearn.metrics import roc_auc_score
+from sklearn.metrics import average_precision_score
             
 def tn(y_true, y_pred): return confusion_matrix(y_true, y_pred)[0, 0]
 def fp(y_true, y_pred): return confusion_matrix(y_true, y_pred)[0, 1]
@@ -29,5 +31,9 @@ def fpr(y_true, y_pred):
 def accuracy(y_true, y_pred):
     return accuracy_score(y_true, y_pred, normalize=True)
 
+def auc_score(y_true, y_score):
+    return roc_auc_score(y_true, y_score)
 
+def avg_precision_score(y_true, y_score):
+    return average_precision_score(y_true, y_score)
 

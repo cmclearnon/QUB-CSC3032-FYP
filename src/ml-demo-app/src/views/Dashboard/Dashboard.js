@@ -35,18 +35,15 @@ class Dashboard extends React.Component {
         error: null,
         accuracy: null,
         tpr: null,
-        fnr: null
+        fnr: null,
+        auc_score: null
     };
 
     componentWillMount() {
-        // this.getPrediction(this.state.url)
         this.getMetrics()
-        // console.log(this.state.probability)
     }
 
     getPrediction = (url) => {
-        // const {url} = this.state;
-        // const url = 'http://attack.xssa.net/domain/端口复用穿墙类/http://attack.xssa.net/domain/端口复用穿墙类/http://attack.xssa.net/domain/端口复用穿墙类/http://attack.xssa.net/domain/端口复用穿墙类/http://chinesevie.com/index.php?option=com_acymailing&ctrl=archive&listid=2-daily-word&lang=enhttp://gd1.alicdn.com/bao/uploaded/i1/TB108HMIXXXXXXBXpXXXXXXXXXX_!!0-item_pic.jpg_400x400.jpg'
         return fetch(`http://localhost:5000/single_prediction?url=${url}`)
           .then(apiResponse => apiResponse.json())
           .then(predictionResults =>
@@ -70,7 +67,8 @@ class Dashboard extends React.Component {
             this.setState({
               accuracy: metricsResults.accuracy,
               tpr: metricsResults.tpr,
-              fnr: metricsResults.fnr
+              fnr: metricsResults.fnr,
+              auc_score: metricsResults.auc_score
             })
           )
           .catch(error =>
@@ -104,7 +102,7 @@ class Dashboard extends React.Component {
                         xs = {12}
                         zl = {3}
                     >
-                        <ModelAccuracy accuracy={this.state.accuracy}/>
+                        <ModelAccuracy accuracy={this.state.accuracy} auc_score={this.state.auc_score}/>
                     </Grid>
                     <Grid
                         item

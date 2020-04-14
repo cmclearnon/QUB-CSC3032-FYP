@@ -25,11 +25,11 @@ class ModelAccuracyResource(Resource):
         # print(y_test.shape)
         # print(y_pred.shape)
         tpr = Metrics.tpr(y_test, y_pred)
-        fpr = Metrics.fpr(y_test, y_pred)
+        fnr = Metrics.fnr(y_test, y_pred)
         acc = Metrics.accuracy(y_test, y_pred)
         result = {
             'tpr': tpr,
-            'fpr': fpr,
+            'fnr': fnr,
             'accuracy': acc
         }
         return result

@@ -3,7 +3,8 @@ import { makeStyles } from '@material-ui/styles';
 import { Grid } from '@material-ui/core';
 import { ModelAccuracy } from './components/ModelAccuracy';
 import { PredictionsMetrics } from './components/PredictionMetrics';
-import { SingleClassification } from './components/SingleClassification'
+import { SingleClassification } from './components/SingleClassification';
+import { URLInput } from './components/URLInput';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -34,18 +35,18 @@ class Dashboard extends React.Component {
         error: null,
         accuracy: null,
         tpr: null,
-        fpr: null
+        fnr: null
     };
 
     componentWillMount() {
-        this.getPrediction(this.state.url)
+        // this.getPrediction(this.state.url)
         this.getMetrics()
-        console.log(this.state.probability)
+        // console.log(this.state.probability)
     }
 
-    getPrediction = () => {
+    getPrediction = (url) => {
         // const {url} = this.state;
-        const url = 'http://attack.xssa.net/domain/端口复用穿墙类/http://attack.xssa.net/domain/端口复用穿墙类/http://attack.xssa.net/domain/端口复用穿墙类/http://attack.xssa.net/domain/端口复用穿墙类/http://chinesevie.com/index.php?option=com_acymailing&ctrl=archive&listid=2-daily-word&lang=enhttp://gd1.alicdn.com/bao/uploaded/i1/TB108HMIXXXXXXBXpXXXXXXXXXX_!!0-item_pic.jpg_400x400.jpg'
+        // const url = 'http://attack.xssa.net/domain/端口复用穿墙类/http://attack.xssa.net/domain/端口复用穿墙类/http://attack.xssa.net/domain/端口复用穿墙类/http://attack.xssa.net/domain/端口复用穿墙类/http://chinesevie.com/index.php?option=com_acymailing&ctrl=archive&listid=2-daily-word&lang=enhttp://gd1.alicdn.com/bao/uploaded/i1/TB108HMIXXXXXXBXpXXXXXXXXXX_!!0-item_pic.jpg_400x400.jpg'
         return fetch(`http://localhost:5000/single_prediction?url=${url}`)
           .then(apiResponse => apiResponse.json())
           .then(predictionResults =>
@@ -69,7 +70,7 @@ class Dashboard extends React.Component {
             this.setState({
               accuracy: metricsResults.accuracy,
               tpr: metricsResults.tpr,
-              fpr: metricsResults.fpr
+              fnr: metricsResults.fnr
             })
           )
           .catch(error =>
@@ -87,6 +88,15 @@ class Dashboard extends React.Component {
                     container
                     spacing={8}
                 >
+                    <Grid
+                        item
+                        lg = {3}
+                        sm = {6}
+                        xs = {12}
+                        zl = {3}
+                    >
+                        <URLInput getPrediction={this.getPrediction}/>
+                    </Grid>
                     <Grid
                         item
                         lg = {3}
@@ -118,7 +128,7 @@ class Dashboard extends React.Component {
                         xl={3}
                         xs={12}
                     >
-                        <PredictionsMetrics tpr={this.state.tpr} fpr={this.state.fpr}/>
+                        <PredictionsMetrics tpr={this.state.tpr} fnr={this.state.fnr}/>
                     </Grid>
                 </Grid>
             </div>

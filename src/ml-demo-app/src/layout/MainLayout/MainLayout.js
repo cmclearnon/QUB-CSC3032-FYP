@@ -12,15 +12,16 @@ const useStyles = makeStyles((theme) => ({
   root: {
     paddingTop: 15,
     height: '100%',
-    // [theme.breakpoints.up('sm')]: {
-    //   paddingTop: 64
-    // }
   },
   shiftContent: {
     paddingLeft: 180
   },
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
+    color: theme.palette.secondary.main
+  },
+  heading: {
+    color: 'secondary'
   },
   content: {
     flexGrow: 1,
@@ -40,9 +41,9 @@ export default function MainLayout(props) {
       })}
     >
       <CssBaseline />
-      <AppBar position="fixed" className={classes.appBar}>
+      <AppBar position="fixed" className={classes.appBar} color={classes.appBar.color}>
         <Toolbar>
-          <Typography variant="h6" noWrap>
+          <Typography variant="h6" noWrap className={classes.heading}>
             Malicious URL Detection
           </Typography>
         </Toolbar>

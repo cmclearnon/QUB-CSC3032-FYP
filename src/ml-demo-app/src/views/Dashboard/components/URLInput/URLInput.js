@@ -15,22 +15,28 @@ import PropTypes from 'prop-types';
 const useStyles = makeStyles(() => ({
     root: {
         height: 150,
-        width: 250
+        width: 350
     }
 }));
   
 const URLInput = (props) => {
     const { className, ...rest } = props;
-    const {getPrediction} = props;
+    const {getprediction} = props;
     const classes = useStyles();
     const [url, setUrl] = useState('');
+    const [emptyInput, setEmptyInput] = useState(false);
 
     const handleChange = (event) => {
         setUrl(event.target.value);
+        setEmptyInput(false);
     };
 
     const invokePrediction = () => {
-        getPrediction(url);
+        if (url === "") {
+            setEmptyInput(true);
+            return;
+        }
+        props.getPrediction(url);
     }
 
     return (
@@ -38,47 +44,40 @@ const URLInput = (props) => {
         {...rest}
         className={clsx(classes.root, className)}
         >
-            <form
-                autoComplete="off"
-                noValidate
-            >
+            <form autoComplete="off" noValidate>
                 <CardContent>
                     <Grid
                         container
                         spacing={3}
+                        container
+                        justify="space-between"
                     >
-                        <Grid
-                        item
-                        md={6}
-                        xs={12}
-                        >
+                        <Grid item md={6} xs={12}>
                             <TextField
+                                error={emptyInput}
+                                helperText={emptyInput ? 'Empty Input!' : ' '}
                                 fullWidth
                                 label="URL"
-                                margin="dense"
+                                margin="normal"
                                 name="url"
                                 onChange={handleChange}
-                                required
+                                style={{ margin: 8 }}
                                 value={url}
-                                variant="outlined"
+                                variant="standard"
                             />
                         </Grid>
                     </Grid>
                 </CardContent>
                 <Divider />
                 <CardActions>
-                    <Button
-                        color="primary"
-                        variant="contained"
-                        onClick={invokePrediction}
-                    >
+                    <Button color="secondary" variant="contained" onClick={invokePrediction}>
                         Predict
                     </Button>
                 </CardActions>
             </form>
         </Card>
     );
-    };
+};
 
 URLInput.propTypes = {
     className: PropTypes.string

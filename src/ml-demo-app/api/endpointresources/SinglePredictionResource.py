@@ -47,8 +47,13 @@ class SinglePredictionResource(Resource):
         features.ExpirationDate_year = features.ExpirationDate_year.astype(np.int64)
         features.ExpirationDate_month = features.ExpirationDate_month.astype(np.int64)
         features.ExpirationDate_day = features.ExpirationDate_day.astype(np.int64)
-        print(f'Features: {features}')
+
+        original_features = features.to_dict('records')
+        print(original_features)
+
         feature_vectors = transformer.transform(features)
+        processed_features = (feature_vectors.toarray()).tolist()
+        print(processed_features)
 
         prediction = model.predict(feature_vectors)
         prediction_probability = model.predict_proba(feature_vectors)
@@ -56,7 +61,9 @@ class SinglePredictionResource(Resource):
         result = {
             'url': url,
             'prediction': int(prediction[0]),
-            'probability': prediction_probability.tolist()
+            'probability': prediction_probability.tolist(),
+            'original_features': original_features,
+            'processed_features': processed_features[0]
         }
 
         return result

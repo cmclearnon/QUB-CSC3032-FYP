@@ -15,8 +15,7 @@ def clean_data(url):
         return url
     return url
 
-def lexical_extract(url):
-    """
+"""
     Extract lexical based features from the URL strings in the dataset. These features include:
     - Length of URL
     - Length of Hostname
@@ -25,8 +24,10 @@ def lexical_extract(url):
     - Special Char Count
     - '.-@%=?' Char Count
     - Digit Count
-    - Unique Char Count"""
+    - Unique Char Count
+"""
 
+def lexical_extract(url):
     if not url:
         return
 
@@ -40,16 +41,12 @@ def lexical_extract(url):
     host_len = len(url_search.group('host'))
     url_dt.update({"HostLength": host_len})
 
-    # TODO: Length of Path
-
     parsed_tld = get_tld(url, fix_protocol=True, fail_silently=True)
     if parsed_tld is None:
         url_dt.update({"TLDLength": 0})
     else:
         tld_len = len(parsed_tld)
         url_dt.update({"TLDLength": tld_len})
-
-    # TODO: Count of special characters
 
     dot_count = str(url).count('.')
     url_dt.update({"DotCount": dot_count})
@@ -69,17 +66,12 @@ def lexical_extract(url):
     question_mark_count = str(url).count('?')
     url_dt.update({"?Count": question_mark_count})
 
-    # TODO: Is executable
-
 
     d_count = sum(list(map(lambda x:1 if x.isdigit() else 0, list(url))))
     url_dt.update({"DigitCount": d_count})
 
     un_ch_count = len(set(url))
     url_dt.update({"UniqueCharCount": un_ch_count})
-
-    # TODO: Is IP address
-
 
     return url_dt
 
@@ -105,9 +97,6 @@ def host_extract(url):
             "ExpirationDate": pd.NaT,
             "HostCountry": None,
             "DomainAge": np.NaN
-            # "ExpYear": np.NaN,
-            # "ExpMonth": np.NaN,
-            # "ExpDay": np.NaN
         })
         
         feature_list.append(url_dt)
@@ -119,9 +108,6 @@ def host_extract(url):
             "ExpirationDate": pd.NaT,
             "HostCountry": None,
             "DomainAge": np.NaN
-            # "ExpYear": np.NaN,
-            # "ExpMonth": np.NaN,
-            # "ExpDay": np.NaN
         })
         
         feature_list.append(url_dt)
@@ -134,9 +120,6 @@ def host_extract(url):
             "ExpirationDate": pd.NaT,
             "HostCountry": None,
             "DomainAge": np.NaN
-            # "ExpYear": np.NaN,
-            # "ExpMonth": np.NaN,
-            # "ExpDay": np.NaN
         })
         
         feature_list.append(url_dt)
@@ -149,9 +132,6 @@ def host_extract(url):
             "ExpirationDate": pd.NaT,
             "HostCountry": None,
             "DomainAge": np.NaN
-            # "ExpYear": np.NaN,
-            # "ExpMonth": np.NaN,
-            # "ExpDay": np.NaN
         })
         
         feature_list.append(url_dt)
@@ -164,9 +144,6 @@ def host_extract(url):
             "ExpirationDate": pd.NaT,
             "HostCountry": None,
             "DomainAge": np.NaN
-            # "ExpYear": np.NaN,
-            # "ExpMonth": np.NaN,
-            # "ExpDay": np.NaN
         })
         
         feature_list.append(url_dt)
@@ -210,14 +187,6 @@ def host_extract(url):
 
     feature_list.append(url_dt)
     df = pd.DataFrame(feature_list)
-    # if pd.isnull(df["ExpirationDate"].any):
-    #     df["ExpYear"] = float("NaN")
-    #     df["ExpMonth"] = float("NaN")
-    #     df["ExpDay"] = float("NaN")
-    # else:
-    #     df["ExpYear"] = df["ExpirationDate"].dt.year
-    #     df["ExpMonth"] = df["ExpirationDate"].dt.month
-    #     df["ExpDay"] = df["ExpirationDate"].dt.day
     
     return df
 

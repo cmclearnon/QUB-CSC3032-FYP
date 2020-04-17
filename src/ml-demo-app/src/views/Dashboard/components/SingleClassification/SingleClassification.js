@@ -24,17 +24,18 @@ const useStyles = makeStyles(theme => ({
     fontWeight: 700
   },
   avatar: {
-    backgroundColor: theme.palette.primary.main,
+    backgroundColor: theme.palette.secondary.main,
     color: theme.palette.primary.contrastText,
     height: 56,
     width: 56
   },
   icon: {
     height: 32,
-    width: 32
+    width: 32,
   },
   progress: {
-    marginTop: theme.spacing(3)
+    marginTop: theme.spacing(3),
+    color: theme.palette.secondary.main
   }
 }));
 
@@ -71,7 +72,7 @@ const SingleClassification = (props) => {
           </Grid>
           <Grid item>
             <Avatar className={classes.avatar}>
-              <AssessmentIcon className={classes.icon} />
+              <AssessmentIcon className={classes.icon}/>
             </Avatar>
           </Grid>
         </Grid>

@@ -8,15 +8,13 @@ import Divider from '@material-ui/core/Divider';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import MailIcon from '@material-ui/icons/Mail';
 import DashboardIcon from '@material-ui/icons/Dashboard';
 import StorageIcon from '@material-ui/icons/Storage';
 import { Link } from 'react-router-dom';
 
 const drawerWidth = 240;
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   root: {
     display: 'flex',
   },
@@ -85,11 +83,7 @@ const Sidebar = () => {
         <div className={classes.drawerContainer}>
           <List>
             {pages.map((item, index) => (
-              // <ListItem button key={item.title}>
-              //   <ListItemIcon>{item.icon}</ListItemIcon>
-              //   <ListItemText primary={item.title} />
-              // </ListItem>
-              <ListItemLink to={item.href} primary={item.title}/>
+              <ListItemLink to={item.href} primary={item.title} key={item.title}/>
             ))}
           </List>
           <Divider />

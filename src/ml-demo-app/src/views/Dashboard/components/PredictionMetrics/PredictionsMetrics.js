@@ -42,7 +42,7 @@ const PredictionsMetrics = (props) => {
             {
               data: [Math.round(tpr * 1000) / 10, Math.round(fnr * 1000) / 10],
               backgroundColor: [
-                theme.palette.primary.main,
+                theme.palette.secondary.main,
                 theme.palette.error.main,
                 theme.palette.warning.main
               ],
@@ -80,12 +80,12 @@ const PredictionsMetrics = (props) => {
         {
             'name': 'True Positive',
             'value': Math.round(tpr * 1000) / 10,
-            color: theme.palette.primary.main
+            color: theme.palette.secondary.main
         },
         {
             'name': 'False Positive',
             'value': Math.round(fnr * 1000) / 10,
-            color: theme.palette.primary.main
+            color: theme.palette.secondary.main
         }
     ];
 

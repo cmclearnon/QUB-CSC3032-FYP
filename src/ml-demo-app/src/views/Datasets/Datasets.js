@@ -11,6 +11,7 @@ const useStyles = makeStyles((theme) => ({
         padding: theme.spacing(4)
     },
     content: {
+        padding: theme.spacing(1),
         flexGrow: 1
     }
 }));
@@ -25,16 +26,25 @@ const Datasets = (props) => {
 
     return (
         <div className = {classes.root}>
-            <Grid
+            <div className = {classes.root}>
+                <Grid
+                    className = {classes.content}
+                    container
+                    spacing={8}
+                >
+                    <FeatureSelector handleupdate={handleUpdate}/>
+                </Grid>
+            </div>
+            <div className = {classes.content}>
+                <DatasetTable/>
+            </div>
+            {/* <Grid
                 className = {classes.content}
                 container
                 spacing={8}
             >
-                {/* <div className={classes.row}>
-                    <FeatureSelector handleUpdate={handleUpdate}/>
-                </div> */}
                 <DatasetTable/>
-            </Grid>
+            </Grid> */}
         </div>
     );
 }

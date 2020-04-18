@@ -60,36 +60,6 @@ const SingleClassification = (props) => {
     console.log('Classification value: ' + classification)
     predictionValue = 0
   }
-  // var probabilityValue, classif;
-
-  // useEffect(() => {
-  //   probabilityValue = getProbabilityValue();
-  //   classif = getClassification();
-  // })
-
-  // const getProbabilityValue = () => {
-  //   // var probabilityValue;
-  //   if (classification === -1) {
-  //     probabilityValue = 0
-  //   } else {
-  //     probabilityValue = Math.round(probabilityList[classification] * 1000) / 10
-  //   }
-
-  //   return probabilityValue
-  // }
-
-  // const getClassification = () => {
-  //   // var classif;
-  //   if (classification === 0) {
-  //     classif = 'Benign';
-  //   } else if (classification === 1) {
-  //     classif = 'Malicious';
-  //   } else if (classification === -1){
-  //     classif = 'No Prediciton'
-  //   }
-
-  //   return classif
-  // }
 
   return (
     <Card

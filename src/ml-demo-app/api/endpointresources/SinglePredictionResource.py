@@ -9,6 +9,7 @@ from ml.utils import Serialiser
 from ml.utils import Metrics
 from ml.featureprocessing.DataTransformers import DomainFeatureScaler, DateEncoder, CategoryEncoder
 from ml.featureprocessing.FeatureEngineering import host_extract
+from ml.pipeline.BaseModelPipeline import DataPreprocessingEngine
 
 import scipy.sparse
 import pandas as pd
@@ -22,49 +23,11 @@ class SinglePredictionResource(Resource):
     )
 
     def get(self, url, model, featureType):
-        model = Serialiser.deserialize(SVC(), Serialiser.json_to_data("", app.config['MODEL_PARAMS_LOC']))
-        date_enc = Serialiser.deserialize(DateEncoder(), Serialiser.json_to_data("", app.config['DATE_ENC_LOC']))
-        cat_enc = Serialiser.deserialize(CategoryEncoder(), Serialiser.json_to_data("", app.config['CATEGORY_ENC_LOC']))
-        scaler = DomainFeatureScaler(scaler_loc=app.config['SCALER_LOC'], has_fit=True)
+        engine = DataPreprocessingEngine(feature_type=featureType)
+        result = engine.process_single_datapoint(url)
 
-        x_train = pd.read_csv(app.config['X_TRAIN_LOC'])
-        y_train = pd.read_csv(app.config['Y_TRAIN_LOC'], header=None)
-        y_train = y_train[1]
+        if (result.get('errors')):
+            return result, 422
 
-        encoder = CategoryEncoder(handle_unknown='ignore', columns=['HostCountry'])
-        t =[('categorial_encoder', encoder, ['HostCountry']),]
-        scaler = DomainFeatureScaler()
-        transformer = ColumnTransformer(t, remainder=scaler)
-        transformer.fit(x_train, y_train)
-
-        features = host_extract(url)
-        features = date_enc.transform(features)
-
-        features.RegistryDate_year = features.RegistryDate_year.astype(np.int64)
-        features.RegistryDate_month = features.RegistryDate_month.astype(np.int64)
-        features.RegistryDate_day = features.RegistryDate_day.astype(np.int64)
-
-        features.ExpirationDate_year = features.ExpirationDate_year.astype(np.int64)
-        features.ExpirationDate_month = features.ExpirationDate_month.astype(np.int64)
-        features.ExpirationDate_day = features.ExpirationDate_day.astype(np.int64)
-
-        original_features = features.to_dict('records')
-        print(original_features)
-
-        feature_vectors = transformer.transform(features)
-        processed_features = (feature_vectors.toarray()).tolist()
-        print(processed_features)
-
-        prediction = model.predict(feature_vectors)
-        prediction_probability = model.predict_proba(feature_vectors)
-
-        result = {
-            'url': url,
-            'prediction': int(prediction[0]),
-            'probability': prediction_probability.tolist(),
-            'original_features': original_features,
-            'processed_features': processed_features[0]
-        }
-
-        return result
+        return result, 200
 

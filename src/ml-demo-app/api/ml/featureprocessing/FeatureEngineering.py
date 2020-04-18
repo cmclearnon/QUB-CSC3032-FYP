@@ -76,10 +76,10 @@ def lexical_extract(url):
     return url_dt
 
 
-def host_extract(url):
-    """
+"""
     This function extracts any domain specific features from the URL to add to the dataset model
-    """
+"""
+def host_extract(url):
     if not url:
         return
     
@@ -91,7 +91,7 @@ def host_extract(url):
 
     try:
         domain = whois.whois(hostname)
-    except whois.parser.PywhoisError:
+    except (whois.parser.PywhoisError, timeout, gaierror, ConnectionResetError, ConnectionRefusedError):
         url_dt.update({
             "RegistryDate": pd.NaT,
             "ExpirationDate": pd.NaT,
@@ -102,55 +102,6 @@ def host_extract(url):
         feature_list.append(url_dt)
         df = pd.DataFrame(feature_list)
         return df
-    except timeout:
-        url_dt.update({
-            "RegistryDate": pd.NaT,
-            "ExpirationDate": pd.NaT,
-            "HostCountry": None,
-            "DomainAge": np.NaN
-        })
-        
-        feature_list.append(url_dt)
-        df = pd.DataFrame(feature_list)
-        
-        return df
-    except gaierror:
-        url_dt.update({
-            "RegistryDate": pd.NaT,
-            "ExpirationDate": pd.NaT,
-            "HostCountry": None,
-            "DomainAge": np.NaN
-        })
-        
-        feature_list.append(url_dt)
-        df = pd.DataFrame(feature_list)
-        
-        return df
-    except ConnectionResetError:
-        url_dt.update({
-            "RegistryDate": pd.NaT,
-            "ExpirationDate": pd.NaT,
-            "HostCountry": None,
-            "DomainAge": np.NaN
-        })
-        
-        feature_list.append(url_dt)
-        df = pd.DataFrame(feature_list)
-        
-        return df
-    except ConnectionRefusedError:
-        url_dt.update({
-            "RegistryDate": pd.NaT,
-            "ExpirationDate": pd.NaT,
-            "HostCountry": None,
-            "DomainAge": np.NaN
-        })
-        
-        feature_list.append(url_dt)
-        df = pd.DataFrame(feature_list)
-        
-        return df
-        
         
     reg_date = domain.creation_date
     if isinstance(reg_date, list):
@@ -189,4 +140,3 @@ def host_extract(url):
     df = pd.DataFrame(feature_list)
     
     return df
-

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/styles';
 import AssessmentIcon from '@material-ui/icons/Assessment';
@@ -41,13 +41,55 @@ const useStyles = makeStyles(theme => ({
 
 const SingleClassification = (props) => {
   const { className, ...rest } = props;
-  const {classification, probability} = props;
+  const {classification, probabilityList} = props;
   const classes = useStyles();
+  var classif;
+  var predictionValue;
+
   if (classification === 0) {
-    var classif = 'Benign';
-  } else {
-      var classif = 'Malicious';
+    classif = 'Benign';
+  } else if (classification === 1) {
+    classif = 'Malicious';
+  } else if (classification === -1){
+    classif = 'No Prediciton'
   }
+
+  if ((classification === 0) || (classification === 1)) {
+    predictionValue = Math.round(probabilityList[classification] * 1000) / 10
+  } else {
+    console.log('Classification value: ' + classification)
+    predictionValue = 0
+  }
+  // var probabilityValue, classif;
+
+  // useEffect(() => {
+  //   probabilityValue = getProbabilityValue();
+  //   classif = getClassification();
+  // })
+
+  // const getProbabilityValue = () => {
+  //   // var probabilityValue;
+  //   if (classification === -1) {
+  //     probabilityValue = 0
+  //   } else {
+  //     probabilityValue = Math.round(probabilityList[classification] * 1000) / 10
+  //   }
+
+  //   return probabilityValue
+  // }
+
+  // const getClassification = () => {
+  //   // var classif;
+  //   if (classification === 0) {
+  //     classif = 'Benign';
+  //   } else if (classification === 1) {
+  //     classif = 'Malicious';
+  //   } else if (classification === -1){
+  //     classif = 'No Prediciton'
+  //   }
+
+  //   return classif
+  // }
 
   return (
     <Card
@@ -68,7 +110,9 @@ const SingleClassification = (props) => {
             >
               CLASSIFICATION CONFIDENCE
             </Typography>
-            <Typography variant="h3">{classif}: {Math.round(probability[classification] * 1000) / 10}%</Typography>
+            <Typography 
+              variant="h3">{classif}: {predictionValue}%
+            </Typography>
           </Grid>
           <Grid item>
             <Avatar className={classes.avatar}>
@@ -78,7 +122,7 @@ const SingleClassification = (props) => {
         </Grid>
         <LinearProgress
           className={classes.progress}
-          value={Math.round(probability[classification] * 1000) / 10}
+          value={predictionValue}
           variant="determinate"
         />
       </CardContent>

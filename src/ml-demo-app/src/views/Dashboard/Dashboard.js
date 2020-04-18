@@ -19,7 +19,19 @@ import { URLInput } from './components/URLInput';
 class Dashboard extends React.Component {
     constructor(props) {
         super(props);
-
+        this.state = {
+          url: "",
+          prediction: -1,
+          probabilityList: [0, 0],
+          metrics: [],
+          error: false,
+          message: "",
+          accuracy: null,
+          tpr: null,
+          fnr: null,
+          auc_score: null,
+          features: []
+        }
         this.getPrediction = this.getPrediction.bind(this);
     }
 // const Dashboard = () => {
@@ -32,19 +44,6 @@ class Dashboard extends React.Component {
             flexGrow: 1,
         }
     }));
-    
-    state = {
-        url: "",
-        prediction: null,
-        probability: [0, 0],
-        metrics: [],
-        error: null,
-        accuracy: null,
-        tpr: null,
-        fnr: null,
-        auc_score: null,
-        features: []
-    };
 
     componentDidMount() {
         this.getMetrics()
@@ -57,7 +56,7 @@ class Dashboard extends React.Component {
             this.setState({
               url: url,
               prediction: predictionResults.prediction,
-              probability: predictionResults.probability[0],
+              probabilityList: predictionResults.probability[0],
               features: predictionResults.original_features
             }),
           )
@@ -97,7 +96,7 @@ class Dashboard extends React.Component {
                         <ModelAccuracy accuracy={this.state.accuracy} auc_score={this.state.auc_score}/>
                     </Grid>
                     <Grid item lg = {4} sm = {6} xs = {12} zl = {3}>
-                        <SingleClassification probability={this.state.probability} classification={this.state.prediction}/>
+                        <SingleClassification probabilityList={this.state.probabilityList} classification={this.state.prediction}/>
                     </Grid>
                 </Grid>
                 <Grid className = {this.classes.content} container spacing={10}>

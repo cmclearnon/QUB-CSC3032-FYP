@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
 const Features = (props) => {
     const { className, ...rest } = props;
     const classes = useStyles();
-    const {url, features, processedFeatures} = props;
+    const {url, features} = props;
 
     return (
         <Card

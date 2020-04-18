@@ -32,18 +32,6 @@ const useStyles = makeStyles(theme => ({
       height: 32,
       width: 32
     },
-    // difference: {
-    //   marginTop: theme.spacing(2),
-    //   display: 'flex',
-    //   alignItems: 'center'
-    // },
-    // differenceIcon: {
-    //   color: theme.palette.error.dark
-    // },
-    // differenceValue: {
-    //   color: theme.palette.error.dark,
-    //   marginRight: theme.spacing(1)
-    // }
   }));
 
 const ModelAccuracy = props => {

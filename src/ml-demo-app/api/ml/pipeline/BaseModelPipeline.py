@@ -1,6 +1,6 @@
-# from ml.featureprocessing.DataTransformers import URLFeatureExtractor, FeatureImportanceSelector, XYTransformer
 from ml.featureprocessing.DataTransformers import DomainFeatureScaler, DateEncoder, CategoryEncoder
 from ml.featureprocessing.FeatureEngineering import host_extract
+from ml.utils import Serialiser
 
 import numpy as np
 import pandas as pd
@@ -17,11 +17,7 @@ from sklearn.neighbors import KNeighborsClassifier
 # from skopt import BayesSearchCV
 # from skopt.space import Real, Categorical, Integer
 
-from ml.utils import Serialiser, Metrics
-
 from flask import current_app as app
-
-from joblib import dump, load
 
 log = logging.getLogger()
 
@@ -67,19 +63,31 @@ class DataPreprocessingEngine():
     def __init__(self, feature_type):
         self.feature_type = feature_type
 
+    def get_model(self, model):
+        if (model == 'BaseSVC'):
+            model = Serialiser.deserialize(SVC(), Serialiser.json_to_data("", app.config['BASE_SVC_LOC']))
+        elif (model == 'OptimisedSVC'):
+            model = Serialiser.deserialize(SVC(), Serialiser.json_to_data("", app.config['BAYESIAN_SVC_LOC']))
+        elif (model == 'BaseKNN'):
+            model = Serialiser.deserialize(KNeighborsClassifier(), Serialiser.json_to_data("", app.config['BASE_KNN_LOC']))
+        elif (model == 'OptimisedKNN'):
+            model = Serialiser.deserialize(KNeighborsClassifier(), Serialiser.json_to_data("", app.config['BAYESIAN_KNN_LOC']))
+        
+        return model
+
     def get_estimators(self):
-        model = Serialiser.deserialize(SVC(), Serialiser.json_to_data("", app.config['MODEL_PARAMS_LOC']))
         date_enc = Serialiser.deserialize(DateEncoder(), Serialiser.json_to_data("", app.config['DATE_ENC_LOC']))
         cat_enc = Serialiser.deserialize(CategoryEncoder(), Serialiser.json_to_data("", app.config['CATEGORY_ENC_LOC']))
         scaler = DomainFeatureScaler(scaler_loc=app.config['SCALER_LOC'], has_fit=True)
 
-        return model, date_enc, cat_enc, scaler
+        return date_enc, cat_enc, scaler
 
     def process_full_dataset():
         return
 
-    def process_single_datapoint(self, url: str):
-        model, date_enc, cat_enc, scaler = self.get_estimators()
+    def process_single_datapoint(self, url: str, model: str):
+        date_enc, cat_enc, scaler = self.get_estimators()
+        classifier = self.get_model(model)
 
         x_train = pd.read_csv(app.config['X_TRAIN_LOC'])
         y_train = pd.read_csv(app.config['Y_TRAIN_LOC'], header=None)
@@ -117,8 +125,8 @@ class DataPreprocessingEngine():
         feature_vectors = pipeline.transform(features)
         processed_features = (feature_vectors.toarray()).tolist()
 
-        prediction = model.predict(feature_vectors)
-        prediction_probability = model.predict_proba(feature_vectors)
+        prediction = classifier.predict(feature_vectors)
+        prediction_probability = classifier.predict_proba(feature_vectors)
 
         result = {
             'url': url,

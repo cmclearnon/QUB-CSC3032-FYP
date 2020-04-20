@@ -18,13 +18,13 @@ import numpy as np
 class SinglePredictionResource(Resource):
     @params_parser(
         reqparse.Argument('url', type=str, required=False, location='args', default=''),
-        reqparse.Argument('model', type=str, required=False, location='args', default='svc'),
+        reqparse.Argument('model', type=str, required=False, location='args', default='BaseSVC'),
         reqparse.Argument('featureType', type=str, required=False, location='args', default='host'),
     )
 
     def get(self, url, model, featureType):
         engine = DataPreprocessingEngine(feature_type=featureType)
-        result = engine.process_single_datapoint(url)
+        result = engine.process_single_datapoint(url, model)
 
         if (result.get('errors')):
             return result, 422

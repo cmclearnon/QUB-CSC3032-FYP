@@ -21,6 +21,7 @@ class Dashboard extends React.Component {
         super(props);
         this.state = {
           url: "",
+          model: "",
           prediction: -1,
           probabilityList: [0, 0],
           metrics: [],
@@ -49,8 +50,9 @@ class Dashboard extends React.Component {
         this.getMetrics()
     }
 
-    getPrediction = (url) => {
-        return fetch(`http://localhost:5000/single_prediction?url=${url}`)
+    getPrediction = (url, model) => {
+      console.log('Model: ' + model)
+        return fetch(`http://localhost:5000/single_prediction?model=${model}&url=${url}`)
           .then(apiResponse => apiResponse.json())
           .then(predictionResults =>
             this.setState({

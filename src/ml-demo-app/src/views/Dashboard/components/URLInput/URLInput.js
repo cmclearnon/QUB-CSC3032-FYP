@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/styles';
 import {
@@ -11,6 +11,7 @@ import {
   Divider
 } from '@material-ui/core';
 import PropTypes from 'prop-types';
+import ModelSelector from './components/ModelSelector';
 
 const useStyles = makeStyles(() => ({
     root: {
@@ -25,6 +26,11 @@ const URLInput = (props) => {
     const classes = useStyles();
     const [url, setUrl] = useState('');
     const [emptyInput, setEmptyInput] = useState(false);
+    const [model, setModel] = useState('');
+
+    useEffect(() => {
+        console.log('URLInput: Model - ' + model);
+    });
 
     const handleChange = (event) => {
         setUrl(event.target.value);
@@ -36,8 +42,12 @@ const URLInput = (props) => {
             setEmptyInput(true);
             return;
         }
-        props.getPrediction(url);
+        props.getPrediction(url, model);
     }
+
+    const handleModelChange = (value) => {
+        setModel(value);
+    }; 
 
     return (
         <Card
@@ -65,6 +75,9 @@ const URLInput = (props) => {
                                 value={url}
                                 variant="standard"
                             />
+                        </Grid>
+                        <Grid item md={6} xs={12}>
+                            <ModelSelector handleModelChange={handleModelChange}/>
                         </Grid>
                     </Grid>
                 </CardContent>

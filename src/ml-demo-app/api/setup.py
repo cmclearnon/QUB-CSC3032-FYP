@@ -46,7 +46,7 @@ def populate_db(feature: str):
                         i['DomainAge'],
                         i['URLType']) for i in dr]
 
-        db.engine.execute(DomainFeatureSet.__table__.insert(), dataset)
+        cur.executemany("INSERT INTO domain_full_featureset (RegistryDate_year,RegistryDate_month,RegistryDate_day,ExpirationDate_year,ExpirationDate_month,ExpirationDate_day,HostCountry,DomainAge,URLType) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);", dataset)
     elif (feature == 'lexical'):
         with open(app.config['LEXICAL_DATA'],'r') as fin:
             dr = csv.DictReader(fin)
@@ -63,7 +63,7 @@ def populate_db(feature: str):
                         i['UniqueCharCount'],
                         i['URLType']) for i in dr]
 
-        db.engine.execute(LexicalFeatureSet.__table__.insert(), dataset)
+        cur.executemany("INSERT INTO lexical_full_featureset (URLLength,HostLength,TLDLength,DotCount,DashCount,AtSymbolCount,PercentSymbolCount,EqualsSymbolCount,QuestionMarkCount,DigitCount,UniqueCharCount,URLType) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);", dataset)
     con.commit()
     con.close()
     print(f'[+] {feature}_full_featureset.db populated')

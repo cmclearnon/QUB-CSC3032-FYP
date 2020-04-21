@@ -133,7 +133,7 @@ class DataPreprocessingEngine():
         feature_vectors = pipeline.transform(features)
         processed_features = (feature_vectors.toarray()).tolist()
 
-        class_prediction, prediction_probabilities = self.predict_url(feature_vectors, odel)
+        class_prediction, prediction_probabilities = self.predict_url(feature_vectors, model)
 
         success_result = {
             'url': url,

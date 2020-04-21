@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
 
 const Datasets = (props) => {
     const classes = useStyles();
-    const {featureType, setFeatureType} = React.useState('host');
+    const {featureType, setFeatureType} = React.useState('domain');
 
     const handleUpdate = (value) => {
         setFeatureType(value)

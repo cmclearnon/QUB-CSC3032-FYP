@@ -6,6 +6,7 @@ import { PredictionsMetrics } from './components/PredictionMetrics';
 import { SingleClassification } from './components/SingleClassification';
 import { Features } from './components/FeatureExtraction';
 import { URLInput } from './components/URLInput';
+import { ErrorBanner } from './components/ErrorBanner';
 
 // const useStyles = makeStyles(theme => ({
 //     root: {
@@ -15,6 +16,7 @@ import { URLInput } from './components/URLInput';
 //         flexGrow: 1,
 //     }
 // }));
+
 
 class Dashboard extends React.Component {
     constructor(props) {
@@ -34,6 +36,7 @@ class Dashboard extends React.Component {
           features: []
         }
         this.getPrediction = this.getPrediction.bind(this);
+        this.handleClearMessage = this.handleClearMessage.bind(this);
     }
 // const Dashboard = () => {
     // classes = useStyles()
@@ -43,11 +46,22 @@ class Dashboard extends React.Component {
         },
         content: {
             flexGrow: 1,
+        },
+        errorMessage: {
+          backgroundcolor: theme.palette.error.main,
+          color: theme.palette.error.contrastText,
+          padding: theme.padding('1em')
         }
     }));
 
     componentDidMount() {
         this.getMetrics()
+    }
+
+    handleClearMessage = () => {
+      this.setState({
+        message: ''
+      })
     }
 
     getPrediction = (url, model) => {
@@ -59,12 +73,15 @@ class Dashboard extends React.Component {
               url: url,
               prediction: predictionResults.prediction,
               probabilityList: predictionResults.probability[0],
-              features: predictionResults.original_features
+              features: predictionResults.original_features,
+              error: predictionResults.error,
             }),
           )
           .catch(error =>
             this.setState({
               error,
+              error: true,
+              message: 'Oops! Looks like a problem occured predicting that URL'
             })
           );
     }
@@ -77,12 +94,14 @@ class Dashboard extends React.Component {
               accuracy: metricsResults.accuracy,
               tpr: metricsResults.tpr,
               fnr: metricsResults.fnr,
-              auc_score: metricsResults.auc_score
+              auc_score: metricsResults.auc_score,
             })
           )
           .catch(error =>
             this.setState({
               error,
+              error: true,
+              message: 'Oops! Looks like a problem occured retrieving model metrics'
             })
           );
     }
@@ -90,6 +109,7 @@ class Dashboard extends React.Component {
     render() {
         return (
             <div className = {this.classes.root}>
+              {/* {this.state.error && <div className="error-message">{this.state.message}</div>} */}
                 <Grid className = {this.classes.content} container spacing={8}>
                     <Grid item lg = {4} sm = {6} xs = {12} zl = {3}>
                         <URLInput getPrediction={this.getPrediction}/>
@@ -109,6 +129,7 @@ class Dashboard extends React.Component {
                         <Features url={this.state.url} features={{...this.state.features[0]}}/>
                     </Grid>
                 </Grid>
+                <ErrorBanner message={this.state.message} handleClearMessage={this.handleClearMessage}/>
             </div>
         );
     };

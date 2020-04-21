@@ -13,10 +13,15 @@ import {
 import PropTypes from 'prop-types';
 import ModelSelector from './components/ModelSelector';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
     root: {
         height: 150,
         width: 350
+    },
+    errorMessage: {
+        backgroundcolor: theme.palette.error.main,
+        color: theme.palette.error.contrastText,
+        // padding: theme.padding('1em')
     }
 }));
   

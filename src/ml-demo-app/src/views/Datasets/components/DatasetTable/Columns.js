@@ -1,0 +1,122 @@
+export default {
+    domain: [
+      { id: 'RegistryDate_year',
+        label: 'RegistryDate_year',
+        minWidth: 60,
+        align: 'right'
+      },
+      { id: 'RegistryDate_month',
+        label: 'RegistryDate_month',
+        minWidth: 60,
+        align: 'right'
+      },
+      {
+        id: 'RegistryDate_day',
+        label: 'RegistryDate_day',
+        minWidth: 60,
+        align: 'right',
+        format: (value) => value.toLocaleString(),
+      },
+      {
+        id: 'ExpirationDate_year',
+        label: 'ExpirationDate_year',
+        minWidth: 60,
+        align: 'right',
+      },
+      {
+        id: 'ExpirationDate_month',
+        label: 'ExpirationDate_month',
+        minWidth: 60,
+        align: 'right',
+        format: (value) => value.toLocaleString(),
+      },
+      {
+        id: 'ExpirationDate_day',
+        label: 'ExpirationDate_day',
+        minWidth: 60,
+        align: 'right',
+        format: (value) => value.toLocaleString(),
+      },
+      {
+        id: 'HostCountry',
+        label: 'HostCountry',
+        minWidth: 60,
+        align: 'right',
+        format: (value) => value.toLocaleString(),
+      },
+      {
+        id: 'DomainAge',
+        label: 'DomainAge',
+        minWidth: 60,
+        align: 'right',
+        format: (value) => value.toLocaleString(),
+      },
+      {
+        id: 'URLType',
+        label: 'URLType',
+        minWidth: 60,
+        align: 'right',
+        format: (value) => value.toLocaleString(),
+      },
+    ],
+    lexical: [
+        { id: 'URLLength',
+          label: 'RegistryDate_year',
+          minWidth: 60,
+          align: 'right'
+        },
+        { id: 'RegistryDate_month',
+          label: 'RegistryDate_month',
+          minWidth: 60,
+          align: 'right'
+        },
+        {
+          id: 'RegistryDate_day',
+          label: 'RegistryDate_day',
+          minWidth: 60,
+          align: 'right',
+          format: (value) => value.toLocaleString(),
+        },
+        {
+          id: 'ExpirationDate_year',
+          label: 'ExpirationDate_year',
+          minWidth: 60,
+          align: 'right',
+        },
+        {
+          id: 'ExpirationDate_month',
+          label: 'ExpirationDate_month',
+          minWidth: 60,
+          align: 'right',
+          format: (value) => value.toLocaleString(),
+        },
+        {
+          id: 'ExpirationDate_day',
+          label: 'ExpirationDate_day',
+          minWidth: 60,
+          align: 'right',
+          format: (value) => value.toLocaleString(),
+        },
+        {
+          id: 'HostCountry',
+          label: 'HostCountry',
+          minWidth: 60,
+          align: 'right',
+          format: (value) => value.toLocaleString(),
+        },
+        {
+          id: 'DomainAge',
+          label: 'DomainAge',
+          minWidth: 60,
+          align: 'right',
+          format: (value) => value.toLocaleString(),
+        },
+        {
+          id: 'URLType',
+          label: 'URLType',
+          minWidth: 60,
+          align: 'right',
+          format: (value) => value.toLocaleString(),
+        },
+      ]
+}

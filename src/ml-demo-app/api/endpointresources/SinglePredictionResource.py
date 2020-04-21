@@ -24,9 +24,9 @@ class SinglePredictionResource(Resource):
 
     def get(self, url, model, featureType):
         engine = DataPreprocessingEngine(feature_type=featureType)
-        result = engine.process_single_datapoint(url, model)
+        result = engine.process_url(url, model)
 
-        if (result.get('errors')):
+        if (result.get('error')):
             return result, 422
 
         return result, 200

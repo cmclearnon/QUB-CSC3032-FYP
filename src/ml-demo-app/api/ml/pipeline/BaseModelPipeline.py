@@ -21,42 +21,42 @@ from flask import current_app as app
 
 log = logging.getLogger()
 
-class BayesianHyperparamModelSelector():
+# class BayesianHyperparamModelSelector():
 
-    def __init__(self, n_iter: int, cv: int, estimator: str):
-        self.n_iter = n_iter
-        self.cv = cv
-        self.estimator = estimator
+#     def __init__(self, n_iter: int, cv: int, estimator: str):
+#         self.n_iter = n_iter
+#         self.cv = cv
+#         self.estimator = estimator
 
-    def build_bayesian_search(self):
-        estimator_search = {} 
-        if self.estimator == 'SVC':
-            pipe = Pipeline([
-                ('model', SVC())
-            ])
-            estimator_search = {
-                'model': Categorical([SVC()]),
-                'model__C': Real(0.01, 100.0, 'log-uniform'),
-                'model__kernel': Categorical(['poly', 'rbf']),
-            }
+#     def build_bayesian_search(self):
+#         estimator_search = {} 
+#         if self.estimator == 'SVC':
+#             pipe = Pipeline([
+#                 ('model', SVC())
+#             ])
+#             estimator_search = {
+#                 'model': Categorical([SVC()]),
+#                 'model__C': Real(0.01, 100.0, 'log-uniform'),
+#                 'model__kernel': Categorical(['poly', 'rbf']),
+#             }
 
-            searchcv = BayesSearchCV(
-                pipe,
-                search_spaces = estimator_search,
-                n_iter=self.n_iter,
-                cv=self.cv,
-                verbose=5,
-                n_jobs=-1
-            )
+#             searchcv = BayesSearchCV(
+#                 pipe,
+#                 search_spaces = estimator_search,
+#                 n_iter=self.n_iter,
+#                 cv=self.cv,
+#                 verbose=5,
+#                 n_jobs=-1
+#             )
 
-        return searchcv
+#         return searchcv
 
-    def run_search(self, X_train, Y_train, search_cv):
-        log.debug(f"Beginning Bayesian Search CV for {self.estimator} - Num of iterations: {search_cv.total_iterations}")
-        search_cv.fit(X_train, Y_train)
-        log.debug(f'Best Estimator found: {search_cv.best_estimator_}')
+#     def run_search(self, X_train, Y_train, search_cv):
+#         log.debug(f"Beginning Bayesian Search CV for {self.estimator} - Num of iterations: {search_cv.total_iterations}")
+#         search_cv.fit(X_train, Y_train)
+#         log.debug(f'Best Estimator found: {search_cv.best_estimator_}')
 
-        dump(search_cv.best_estimator_, 'ml/models/best_estim.joblib')
+#         dump(search_cv.best_estimator_, 'ml/models/best_estim.joblib')
       
 
 class DataPreprocessingEngine():
@@ -82,33 +82,40 @@ class DataPreprocessingEngine():
 
         return date_enc, cat_enc, scaler
 
-    def process_full_dataset():
-        return
+    def extract_features(self, url: str):
+        url_features = host_extract(url)
 
-    def process_single_datapoint(self, url: str, model: str):
-        date_enc, cat_enc, scaler = self.get_estimators()
+        return url_features
+
+    def predict_url(self, feature_vectors, model: str):
         classifier = self.get_model(model)
+        class_prediction = classifier.predict(feature_vectors)
+        prediction_probability = classifier.predict_proba(feature_vectors)
+
+        return class_prediction, prediction_probability
+
+    def process_url(self, url: str, model: str):
+        date_enc, cat_enc, scaler = self.get_estimators()
 
         x_train = pd.read_csv(app.config['X_TRAIN_LOC'])
         y_train = pd.read_csv(app.config['Y_TRAIN_LOC'], header=None)
         y_train = y_train[1]
 
+        scaler = DomainFeatureScaler()
         encoder = CategoryEncoder(handle_unknown='ignore', columns=['HostCountry'])
         t =[('categorial_encoder', encoder, ['HostCountry']),]
-        scaler = DomainFeatureScaler()
         transformer = ColumnTransformer(t, remainder=scaler)
 
         pipeline = Pipeline(steps=[
             ('full_column_transformer', transformer)
         ])
-
         pipeline.fit(x_train, y_train)
 
-        features = host_extract(url)
+        features = self.extract_features(url)
         features = date_enc.transform(features)
 
         if (features.isnull().values.any()):
-            result = {
+            fail_result = {
                 'url': url,
                 'prediction': np.nan,
                 'probability': [],
@@ -117,24 +124,28 @@ class DataPreprocessingEngine():
                 'error': True,
                 'message': 'Cannot retrieve required data for URL'
             }
+            print(fail_result)
+            return fail_result
 
-            return result
 
         original_features = features.to_dict('records')
 
         feature_vectors = pipeline.transform(features)
         processed_features = (feature_vectors.toarray()).tolist()
 
-        prediction = classifier.predict(feature_vectors)
-        prediction_probability = classifier.predict_proba(feature_vectors)
+        class_prediction, prediction_probabilities = self.predict_url(feature_vectors, odel)
 
-        result = {
+        success_result = {
             'url': url,
-            'prediction': int(prediction[0]),
-            'probability': prediction_probability.tolist(),
+            'prediction': int(class_prediction[0]),
+            'probability': prediction_probabilities.tolist(),
             'original_features': original_features,
-            'processed_features': processed_features[0]
+            'processed_features': processed_features[0],
+            'error': False,
+            'message': 'URL Classification successful'
         }
 
-        return result
+        print(success_result)
+
+        return success_result
 

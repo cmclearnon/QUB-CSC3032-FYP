@@ -11,7 +11,9 @@ import pandas as pd
 
 model_params_loc='/Users/chrismclearnon/Developer/QUB-CSC3032-FYP/src/ml-demo-app/api/ml/models/bayesian_svc_model.json'
 
-
+'''
+API Resource for retrieval of specified model performance metrics from testing
+'''
 class ModelAccuracyResource(Resource):
     @params_parser(
         reqparse.Argument('model', type=str, required=False, location='args', default='SVC'),
@@ -19,6 +21,22 @@ class ModelAccuracyResource(Resource):
     )
 
     def get(self, model, featureType):
+        """ 
+        GET Resource endpoint for model performance metrics retrieval
+        Args:
+            model (str): Model requested
+            featureType (str): The feature type of the requested model
+
+        Returns:
+            result (dict): Returned dictionary of performance metrics
+                           'tpr': True Positive Rate of model classification
+                           'fnr': False Negative Rate of model classification
+                           'accuravy': Overall Accuracy Score of model classification
+                           'auc_score': Area under Curve score of model
+                           'error': Error flag
+                           'message': 
+
+        """
         engine = DataPreprocessingEngine(feature_type=featureType)
         classifier = engine.get_model(model)
 

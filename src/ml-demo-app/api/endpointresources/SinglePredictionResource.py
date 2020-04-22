@@ -15,6 +15,9 @@ import scipy.sparse
 import pandas as pd
 import numpy as np
 
+'''
+API Resource for requesting prediction of a submitted URL
+'''
 class SinglePredictionResource(Resource):
     @params_parser(
         reqparse.Argument('url', type=str, required=False, location='args', default=''),
@@ -23,6 +26,23 @@ class SinglePredictionResource(Resource):
     )
 
     def get(self, url, model, featureType):
+        """ 
+        GET Resource endpoint for model classification of submitted URL
+        Args:
+            url (str): URL to be classified
+            model (str): Model requested
+            featureType (str): The feature type of the requested model
+
+        Returns:
+            result (dict): Returned dictionary of URL prediction information from DataPreprocessingEngine
+                           'url': URL that was submitted in request,
+                           'prediction': The classification value of the prediction outcome (0 = Benign, 1 = Malicious),
+                           'probability': Array containing the model's probabilities of predicting URL as each class,
+                           'original_features': Dictionary of the features extracted from the URL,
+                           'error': Error flag,
+                           'message': Message for 
+
+        """
         engine = DataPreprocessingEngine(feature_type=featureType)
         result = engine.process_url(url, model)
 

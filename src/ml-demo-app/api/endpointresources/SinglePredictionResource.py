@@ -9,7 +9,7 @@ from ml.utils import Serialiser
 from ml.utils import Metrics
 from ml.featureprocessing.DataTransformers import DomainFeatureScaler, DateEncoder, CategoryEncoder
 from ml.featureprocessing.FeatureEngineering import host_extract
-from ml.pipeline.BaseModelPipeline import DataPreprocessingEngine
+from ml.pipeline.DataPredictionPipeline import DataPreprocessingEngine
 
 import scipy.sparse
 import pandas as pd
@@ -18,8 +18,8 @@ import numpy as np
 class SinglePredictionResource(Resource):
     @params_parser(
         reqparse.Argument('url', type=str, required=False, location='args', default=''),
-        reqparse.Argument('model', type=str, required=False, location='args', default='BaseSVC'),
-        reqparse.Argument('featureType', type=str, required=False, location='args', default='host'),
+        reqparse.Argument('model', type=str, required=False, location='args', default='SVC'),
+        reqparse.Argument('featureType', type=str, required=False, location='args', default='domain'),
     )
 
     def get(self, url, model, featureType):

@@ -14,7 +14,8 @@ import PropTypes from 'prop-types';
 
 const useStyles = makeStyles(theme => ({
   root: {
-    height: '100%'
+    height: '100%',
+    width: 450
   },
   content: {
     alignItems: 'center',

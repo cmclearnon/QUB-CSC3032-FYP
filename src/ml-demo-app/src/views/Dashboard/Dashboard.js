@@ -64,9 +64,9 @@ class Dashboard extends React.Component {
       })
     }
 
-    getPrediction = (url, model) => {
-      console.log('Model: ' + model)
-        return fetch(`http://localhost:5000/single_prediction?model=${model}&url=${url}`)
+    getPrediction = (url, model, feature) => {
+      console.log(`http://localhost:5000/single_prediction?model=${model}&featureType=${feature}&url=${url}`)
+        return fetch(`http://localhost:5000/single_prediction?model=${model}&featureType=${feature}&url=${url}`)
           .then(apiResponse => apiResponse.json())
           .then(predictionResults =>
             this.setState({
@@ -110,10 +110,15 @@ class Dashboard extends React.Component {
         return (
             <div className = {this.classes.root}>
               {/* {this.state.error && <div className="error-message">{this.state.message}</div>} */}
-                <Grid className = {this.classes.content} container spacing={8}>
+              <Grid className = {this.classes.content} container spacing={8}>
                     <Grid item lg = {4} sm = {6} xs = {12} zl = {3}>
                         <URLInput getPrediction={this.getPrediction}/>
                     </Grid>
+                </Grid>
+                <Grid className = {this.classes.content} container spacing={8}>
+                    {/* <Grid item lg = {4} sm = {6} xs = {12} zl = {3}>
+                        <URLInput getPrediction={this.getPrediction}/>
+                    </Grid> */}
                     <Grid item lg = {3} sm = {6} xs = {12} zl = {3}>
                         <ModelAccuracy accuracy={this.state.accuracy} auc_score={this.state.auc_score}/>
                     </Grid>

@@ -12,16 +12,16 @@ import {
 } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import ModelSelector from './components/ModelSelector';
+import {FeatureSelector} from '../../../FeatureSelector';
 
 const useStyles = makeStyles((theme) => ({
     root: {
         height: 150,
-        width: 350
+        width: 1000
     },
     errorMessage: {
         backgroundcolor: theme.palette.error.main,
         color: theme.palette.error.contrastText,
-        // padding: theme.padding('1em')
     }
 }));
   
@@ -32,9 +32,11 @@ const URLInput = (props) => {
     const [url, setUrl] = useState('');
     const [emptyInput, setEmptyInput] = useState(false);
     const [model, setModel] = useState('');
+    const [feature, setFeature] = useState('domain');
 
     useEffect(() => {
         console.log('URLInput: Model - ' + model);
+        console.log('Feature Type - ' + feature);
     });
 
     const handleChange = (event) => {
@@ -47,12 +49,16 @@ const URLInput = (props) => {
             setEmptyInput(true);
             return;
         }
-        props.getPrediction(url, model);
+        props.getPrediction(url, model, feature);
     }
 
     const handleModelChange = (value) => {
         setModel(value);
     }; 
+
+    const handleFeatureChange = (value) => {
+        setFeature(value);
+    }
 
     return (
         <Card
@@ -64,7 +70,6 @@ const URLInput = (props) => {
                     <Grid
                         container
                         spacing={3}
-                        container
                         justify="space-between"
                     >
                         <Grid item md={6} xs={12}>
@@ -81,8 +86,13 @@ const URLInput = (props) => {
                                 variant="standard"
                             />
                         </Grid>
-                        <Grid item md={6} xs={12}>
-                            <ModelSelector handleModelChange={handleModelChange}/>
+                        <Grid container md={6} xs={12}>
+                            <Grid item md={6} xs={12}>
+                                <ModelSelector handleModelChange={handleModelChange}/>
+                            </Grid>
+                            <Grid item md={6} xs={12}>
+                                <FeatureSelector handleFeatureChange={handleFeatureChange}/>
+                            </Grid>
                         </Grid>
                     </Grid>
                 </CardContent>

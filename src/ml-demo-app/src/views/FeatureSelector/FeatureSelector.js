@@ -6,6 +6,8 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
+import Button from '@material-ui/core/Button';
+import { Paper } from '@material-ui/core';
 
 const useStyles = makeStyles(theme => ({
     root: {},
@@ -22,9 +24,9 @@ const useStyles = makeStyles(theme => ({
         display: 'flex',
         flexBasis: 420
     },
-    spacer: {
-        flexGrow: 1
-    },
+    // spacer: {
+    //     flexGrow: 1
+    // },
     formControl: {
         margin: theme.spacing(1),
         minWidth: 120,
@@ -32,15 +34,15 @@ const useStyles = makeStyles(theme => ({
   }));
 
 
-const ModelSelector = (props) => {
+const FeatureSelector = (props) => {
     const {className, ...rest} = props;
     const classes = useStyles();
-    const [modelType, setModelType]= React.useState('');
+    const [ featureType, setFeatureType ]= React.useState('');
     const [open, setOpen] = React.useState(false);
     
-    const handleChange = (event) => {
-        setModelType(event.target.value);
-        props.handleModelChange(event.target.value);
+    const updateFeature = (event) => {
+        setFeatureType(event.target.value);
+        props.handleFeatureChange(event.target.value);
     };    
 
     const handleClose = () => {
@@ -51,28 +53,24 @@ const ModelSelector = (props) => {
         setOpen(true);
     };
 
-    const getModelType = () => {
-        return modelType;
-    };
-
     return (
         <div {...rest} className={clsx(classes.root, className)}>
             <FormControl className={classes.formControl}>
-                <InputLabel id="select-model-id">Model</InputLabel>
+                <InputLabel id="select-feature-id">Feature</InputLabel>
                 <Select
-                    labelId="select-model-label"
-                    id="select-model"
+                    labelId="select-feature-label"
+                    id="select-feature"
                     open={open}
                     onClose={handleClose}
                     onOpen={handleOpen}
-                    value={modelType}
-                    onChange={handleChange}
+                    value={featureType}
+                    onChange={updateFeature}
                 >
                     <MenuItem value="">
                         <em>None</em>
                     </MenuItem>
-                    <MenuItem value={'SVC'}>SVC</MenuItem>
-                    <MenuItem value={'KNN'}>KNN</MenuItem>
+                    <MenuItem value={'domain'}>Domain</MenuItem>
+                    <MenuItem value={'lexical'}>Lexical</MenuItem>
                 </Select>
             </FormControl>
         </div>
@@ -80,8 +78,8 @@ const ModelSelector = (props) => {
     )
 }
 
-ModelSelector.propTypes = {
+FeatureSelector.propTypes = {
     className: PropTypes.string,
   };
 
-export default ModelSelector;
+export default FeatureSelector;

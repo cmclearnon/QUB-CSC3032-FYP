@@ -124,7 +124,7 @@ class DataPreprocessingEngine():
                 return fail_result
             original_features = features.to_dict('records')
         elif (self.feature_type == 'lexical'):
-            original_features = features
+            original_features = [features]
             features = pd.DataFrame(features, index=[0])
 
         feature_vectors = pipeline.transform(features)

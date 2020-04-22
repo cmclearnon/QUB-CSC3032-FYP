@@ -9,8 +9,6 @@ from ml.utils import Metrics
 import scipy.sparse
 import pandas as pd
 
-model_params_loc='/Users/chrismclearnon/Developer/QUB-CSC3032-FYP/src/ml-demo-app/api/ml/models/bayesian_svc_model.json'
-
 '''
 API Resource for retrieval of specified model performance metrics from testing
 '''

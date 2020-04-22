@@ -130,3 +130,4 @@ node_modules
 
 src/ml-demo-app/node_modules
 src/ml-demo-app/yarn.lock
+.DS_Store

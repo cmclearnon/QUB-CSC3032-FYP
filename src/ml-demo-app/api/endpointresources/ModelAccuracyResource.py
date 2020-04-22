@@ -2,6 +2,8 @@ from flask_restful import Resource, fields, marshal_with, reqparse
 from req_param_parser import params_parser
 from sklearn.svm import SVC
 
+from ml.pipeline.DataPredictionPipeline import DataPreprocessingEngine
+
 from ml.utils import Serialiser
 from ml.utils import Metrics
 import scipy.sparse
@@ -12,28 +14,45 @@ model_params_loc='/Users/chrismclearnon/Developer/QUB-CSC3032-FYP/src/ml-demo-ap
 
 class ModelAccuracyResource(Resource):
     @params_parser(
-        reqparse.Argument('model', type=str, required=False, location='args', default='svc'),
+        reqparse.Argument('model', type=str, required=False, location='args', default='SVC'),
+        reqparse.Argument('featureType', type=str, required=False, location='args', default='domain'),
     )
 
-    def get(self, model):
-        model = Serialiser.deserialize(SVC(), Serialiser.json_to_data("", model_params_loc))
-        x_test = scipy.sparse.load_npz('/Users/chrismclearnon/Developer/QUB-CSC3032-FYP/src/data/domain/x_test.npz')
-        y_test = pd.read_csv('/Users/chrismclearnon/Developer/QUB-CSC3032-FYP/src/data/domain/y_test.csv', header=None)
+    def get(self, model, featureType):
+        engine = DataPreprocessingEngine(feature_type=featureType)
+        classifier = engine.get_model(model)
 
-        y_pred=model.predict(x_test)
-        y_test = y_test[1]
+        if (classifier is None):
+            failed_result = {
+                'tpr': 0,
+                'fnr': 0,
+                'accuracy': 0,
+                'auc_score': 0,
+                'error': True,
+                'message': f'{model} not found'
+            }
+
+            return failed_result, 422
+
+        x_test, y_test = engine.get_test_datasets()
+        y_pred=classifier.predict(x_test)
         
         tpr = Metrics.tpr(y_test, y_pred)
         fnr = Metrics.fnr(y_test, y_pred)
         acc = Metrics.accuracy(y_test, y_pred)
 
-        y_score = model.decision_function(x_test)
-        auc_score = Metrics.auc_score(y_test, y_score)
+        if (model != 'KNN'):
+            y_score = classifier.decision_function(x_test)
+            auc_score = Metrics.auc_score(y_test, y_score)
+        else:
+            auc_score = 0
 
         result = {
             'tpr': tpr,
             'fnr': fnr,
             'accuracy': acc,
-            'auc_score': auc_score
+            'auc_score': auc_score,
+            'error': False,
+            'message': f'{model} performance metrics retrieved'
         }
-        return result
+        return result, 200

@@ -4,6 +4,7 @@ from ml.utils import Serialiser
 
 import numpy as np
 import pandas as pd
+import scipy.sparse
 
 import logging
 
@@ -61,6 +62,20 @@ class DataPreprocessingEngine():
             return None, None
         
         return x_train, y_train
+
+    def get_test_datasets(self):
+        if (self.feature_type == 'domain'):
+            x_test = scipy.sparse.load_npz(app.config['DOMAIN_X_TEST_LOC'])
+            y_test = pd.read_csv(app.config['DOMAIN_Y_TEST_LOC'], header=None)
+            y_test = y_test[1]
+        elif (self.feature_type == 'lexical'):
+            x_test = np.load(app.config['LEXICAL_X_TEST_LOC'])
+            y_test = pd.read_csv(app.config['LEXICAL_Y_TEST_LOC'], header=None)
+            y_test = y_test[1]
+        else:
+            return None, None
+        
+        return x_test, y_test
 
     def get_transformers(self):
         if (self.feature_type == 'domain'):

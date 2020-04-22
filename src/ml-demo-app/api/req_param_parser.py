@@ -6,8 +6,8 @@ def params_parser(*arguments):
         @wraps(func)
         def wrapper(*args, **kwargs):
             parser = reqparse.RequestParser()
-            for argument in arguments:
-                parser.add_argument(argument)
+            for arg in arguments:
+                parser.add_argument(arg)
             kwargs.update(parser.parse_args())
             return func(*args, **kwargs)
         return wrapper

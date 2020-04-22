@@ -47,11 +47,11 @@ const useStyles = makeStyles(theme => ({
 const FeatureSelector = (props) => {
     const {className, ...rest} = props;
     const classes = useStyles();
-    const featureType = React.useState('');
+    const [ featureType, setFeatureType ]= React.useState('');
     const [open, setOpen] = React.useState(false);
     
-    const updateFeature = (value) => {
-        props.handleupdate(value)
+    const updateFeature = (event) => {
+        setFeatureType(event.target.value);
     };    
 
     const handleClose = () => {
@@ -60,6 +60,14 @@ const FeatureSelector = (props) => {
 
     const handleOpen = () => {
         setOpen(true);
+    };
+
+    const triggerDatasetSearch = () => {
+        props.handleUpdate(featureType);
+    };
+
+    const getFeatureType = () => {
+        return featureType;
     };
 
     return (
@@ -74,13 +82,13 @@ const FeatureSelector = (props) => {
                         onClose={handleClose}
                         onOpen={handleOpen}
                         value={featureType}
-                        onChange={(event) => {updateFeature(event.target.value)}}
+                        onChange={updateFeature}
                     >
-                        <MenuItem value={'host'}>Host</MenuItem>
+                        <MenuItem value={'domain'}>Domain</MenuItem>
                         <MenuItem value={'lexical'}>Lexical</MenuItem>
                     </Select>
                 </FormControl>
-                <Button className={classes.button} variant="contained" onClick={handleOpen} color="secondary">
+                <Button className={classes.button} variant="contained" onClick={triggerDatasetSearch} color="secondary">
                     Search
                 </Button>
             </Paper>

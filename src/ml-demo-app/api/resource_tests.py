@@ -57,6 +57,14 @@ class BasicTests(unittest.TestCase):
         self.assertEqual(resp_json['original_features'], {})
         self.assertEqual(resp_json['processed_features'], [])
 
+    def test_single_prediction_invalid_model(self):
+        invalid_model = 'InvalidModel'
+        url = 'http://www.824555.com/app/member/BrowseSport/browse.php?ptype=S'
+        response = self.app.get(f'/single_prediction?url={url}&model={invalid_model}')
+        resp_json = json.loads(response.data)
+        self.assertEqual(resp_json['error'], True)
+        self.assertEqual(resp_json['message'], f'{invalid_model} not found')
+
     def test_single_prediction_valid_url_values(self):
         model = 'OptimisedSVC'
         url = 'http://www.824555.com/app/member/BrowseSport/browse.php?ptype=S'

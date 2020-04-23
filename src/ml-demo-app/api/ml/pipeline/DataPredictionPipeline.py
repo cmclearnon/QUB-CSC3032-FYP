@@ -146,7 +146,6 @@ class DataPreprocessingEngine():
 
         class_prediction, prediction_probabilities = self.predict_url(feature_vectors, model)
         if (class_prediction is None) & (prediction_probabilities is None):
-            print('returning none model')
             fail_result = {
                 'url': url,
                 'prediction': np.nan,
@@ -165,8 +164,6 @@ class DataPreprocessingEngine():
             'error': False,
             'message': 'URL Classification successful'
         }
-
-        print(success_result)
 
         return success_result
 

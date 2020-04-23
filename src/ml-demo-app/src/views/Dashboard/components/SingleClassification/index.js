@@ -1,0 +1,1 @@
+export {default as SingleClassification} from './SingleClassification';

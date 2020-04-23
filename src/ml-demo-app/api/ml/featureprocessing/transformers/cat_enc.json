@@ -1,0 +1,1 @@
+{"handle_unknown": "ignore", "columns": ["HostCountry"], "encoder": null, "categories": [{"py/numpy.ndarray": {"values": ["AE", "AU", "BS", "CA", "CH", "CN", "CY", "DE", "DK", "EG", "FR", "GB", "GI", "HK", "IL", "IN", "JP", "KR", "KY", "NL", "PA", "PH", "REDACTED FOR PRIVACY", "RU", "TH", "TR", "UA", "US", "VN", "ZA", "ca", "us"], "dtype": "object"}}], "has_fit": true}

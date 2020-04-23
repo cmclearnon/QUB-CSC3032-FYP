@@ -129,5 +129,5 @@ node_modules
 # src/ml-demo-app/.yarn/
 
 src/ml-demo-app/node_modules
-src/ml-demo-app/yarn.lock
+# src/ml-demo-app/yarn.lock
 .DS_Store
